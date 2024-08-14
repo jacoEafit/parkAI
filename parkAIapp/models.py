@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Vehiculo(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
