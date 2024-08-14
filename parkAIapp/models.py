@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Vehiculo(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     placa = models.CharField(max_length=10, unique=True)
     marca = models.CharField(max_length=50)
     modelo = models.CharField(max_length=50)
