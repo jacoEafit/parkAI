@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Vehiculo,Celda
 
-# Register your models here.
+admin.site.register(Celda)
+admin.site.register(Vehiculo)
