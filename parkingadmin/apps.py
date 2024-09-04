@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ParkaiappConfig(AppConfig):
+class ParkingadminConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'parkAIapp'
+    name = 'parkingadmin'
