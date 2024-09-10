@@ -68,6 +68,7 @@ class Ingreso(models.Model):
     ing_vehiculo_id = models.ForeignKey(Vehiculo, on_delete=models.CASCADE,default=None)
     ing_placa_vehiculo = models.CharField(max_length=15)
     ing_fecha_hora = models.DateTimeField()
+    ing_imagen_vehiculo = models.ImageField(upload_to='imagenes_vehiculos/', default=None)
 
 
 
@@ -77,7 +78,7 @@ class Egreso(models.Model):
     egr_vehiculo_id = models.ForeignKey(Vehiculo, on_delete=models.CASCADE,default=None)
     egr_placa_vehiculo = models.CharField(max_length=15)
     egr_fecha_hora = models.DateTimeField()
-
+    egr_imagen_vehiculo = models.ImageField(upload_to='imagenes_vehiculos/', default=None)
 
 
 
