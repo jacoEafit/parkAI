@@ -1,7 +1,11 @@
-"""import base64
+import base64
 from inference_sdk import InferenceHTTPClient
 import cv2 
 import pytesseract
+import re
+
+# Configura la ruta del ejecutable de Tesseract
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
 #Función que lee la placa de un vehículo dada una imagen
 def recortar_placa(ruta_imagen):
@@ -36,8 +40,11 @@ def recortar_placa(ruta_imagen):
 
 def extraer_texto_placa(imagen_placa):
 
-    # Configura la ruta de tesseract
-    pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
     # Usa pytesseract para leer la placa
     plate_text = pytesseract.image_to_string(imagen_placa, config='--psm 8')
-    return plate_text """
+    return plate_text 
+
+
+def eliminar_simbolos(string):
+    # Usamos una expresión regular para mantener solo letras, números y espacios
+    return re.sub(r'[^a-zA-Z0-9\s]', '', string)

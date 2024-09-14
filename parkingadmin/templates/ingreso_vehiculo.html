@@ -2,29 +2,49 @@
 {% load static %}
 
 {% block content %}
-    <div>
-        <h1>Subir Imagen</h1>
-        <form method="post" enctype="multipart/form-data">
+<div class= "d-flex flex-column min-vh-100">
+<div class="container d-flex flex-column justify-content-center align-items-center flex-grow-1">
+    <div class="col-md-6 text-center">
+        <h1 class="mb-4">Ingreso de vehículos</h1>
+
+        <form method="post" enctype="multipart/form-data" class="mb-4 w-100">
             {% csrf_token %}
-            <input type="file" name="image" accept="image/*" required class="custom-file-input">
-            <button type="submit">Subir</button>
+            <div class="mb-3">
+                <label for="image" class="form-label">Selecciona una imagen del vehículo</label>
+                <input type="file" name="image" id="image" accept="image/*" required class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Subir Imagen</button>
         </form>
+
+        {% if url_imagen_vehiculo %}
+            <div class="card mb-4">
+                <img src="{{ url_imagen_vehiculo }}" class="card-img-top" alt="Imagen del vehículo" style="max-height: 400px;">
+                <div class="card-body">
+                    {% if placa_vehiculo %}
+                    <p class="card-text">Placa detectada: {{ placa_vehiculo }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        
+        {% else %}
+        <div class="card mb-4">
+            <img src="{% static 'no_hay_vehiculo.png' %}" class="card-img-top" alt="Imagen del vehículo" style="max-height: 400px;">
+            <div class="card-body">
+
+            </div>
+        </div>
+        {% endif %}
+
+        {% if vehiculo_existe %}
+            <div class="alert alert-success" role="alert">
+                <strong>¡Vehículo encontrado!</strong> Ya existe en el sistema. Puedes realizar el ingreso <a href="#" class="alert-link">aquí</a>.
+            </div>
+        {% elif vehiculo_existe == False %}
+            <div class="alert alert-warning" role="alert">
+                <strong>Vehículo no encontrado.</strong> Por favor, registra el vehículo <a href="#" class="alert-link">aquí</a>.
+            </div>
+        {% endif %}
     </div>
-
-    {% if url_imagen_vehiculo %}
-        <div style="border: 1px solid #ddd; padding: 10px; width: 300px; height: 300px;">
-            <img src="{{ url_imagen_vehiculo }}" alt="Imagen subida" style="max-width: 100%; max-height: 100%;">
-        </div>
-    {% endif %}
-
-    {% if vehiculo_existe %}
-        <div style="border: 1px solid #ddd; padding: 10px; width: 300px; height: 300px;">
-            <p>El vehiculo ya existe. ingreso permitido</p>
-        </div>
-    {% elif vehiculo_existe == False %}
-        <div style="border: 1px solid #ddd; padding: 10px; width: 300px; height: 300px;">
-            <p>El vehiculo no existe, porfavor procede con el registro</p>
-        </div>
-    {% endif %}
-
+</div>
+</div>
 {% endblock content %}
