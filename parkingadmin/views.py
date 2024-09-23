@@ -22,9 +22,7 @@ def ingreso_vehiculo(request):
 
 
         #Se extrae placa vehiculo con visión artificial:
-        recorte_placa = helpers.recortar_placa(ruta_imagen = 'media/'+nombre_imagen_vehiculo)
-        placa_vhc_ingreso = helpers.extraer_texto_placa(imagen_placa = recorte_placa)
-        placa_vhc_ingreso = helpers.eliminar_simbolos(placa_vhc_ingreso)
+        placa_vhc_ingreso,url_imagen_recorte_placa = helpers.procesar_placa(ruta_imagen = 'media/'+nombre_imagen_vehiculo, nombre_imagen_vehiculo = imagen_vehiculo.name)
 
         #Se valida si dicho vehículo existe:
         try:
@@ -41,7 +39,7 @@ def ingreso_vehiculo(request):
         #ingreso.save()
 
         #Se renderiza nuevo template con respectivo contexto sobre nuevo ingreso
-        context = {"vehiculo_existe":vehiculo_existe,"url_imagen_vehiculo":url_imagen_vehiculo,"placa_vehiculo":placa_vhc_ingreso}
+        context = {"vehiculo_existe":vehiculo_existe,"url_imagen_vehiculo":url_imagen_vehiculo,"url_imagen_recorte_placa":url_imagen_recorte_placa,"placa_vehiculo":placa_vhc_ingreso}
         return render(request,'ingreso_vehiculo.html',context=context)
 
     #Si no han ingresado imagen
