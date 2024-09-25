@@ -2,61 +2,63 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center pt-5">
     <div class="row w-100">
-        <!-- Columna izquierda: Formulario de carga -->
-        <div class="col-md-5 d-flex align-items-center justify-content-center">
-            <div class="card shadow-lg w-100 p-4">
-                <h2 class="text-center mb-4">Subir Imagen del Vehículo</h2>
+        <!-- Columna para el card principal -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center mb-4">
+            <div class="card shadow-lg w-75 p-4">
+                <h2 class="text-center mb-4 text-primary">Subir Imagen del Vehículo</h2>
                 
+                <!-- Formulario de subida de imagen -->
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="image" class="form-label">Selecciona una imagen del vehículo</label>
                         <input type="file" name="image" id="image" accept="image/*" required class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Subir Imagen</button>
+                    <button type="submit" class="btn btn-primary w-100 mb-4">Subir Imagen</button>
                 </form>
+
+                <!-- Mostrar imagen del vehículo en el mismo card -->
+                {% if url_imagen_vehiculo %}
+                <div class="text-center">
+                    <img src="{{ url_imagen_vehiculo }}" class="img-fluid rounded shadow" alt="Imagen del vehículo" style="max-height: 250px; object-fit: contain; width: 100%;">
+                </div>
+                {% else %}
+                <!-- Imagen predeterminada si no se ha subido una imagen -->
+                <div class="text-center mb-4">
+                    <img src="{% static 'no_hay_vehiculo.png' %}" class="img-fluid rounded shadow" alt="Sin imagen del vehículo" style="max-height: 250px; object-fit: contain; width: 100%;">
+                    <p class="text-muted mt-3">Aún no has subido una imagen.</p>
+                </div>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Columna derecha: Información del vehículo -->
-        <div class="col-md-7 d-flex align-items-center justify-content-center">
-            <div class="card shadow-lg w-100 p-4">
-                <!-- Mostrar imagen del vehículo si está disponible -->
-                {% if url_imagen_vehiculo %}
-                <div class="mb-4">
-                    <img src="{{ url_imagen_vehiculo }}" class="img-fluid rounded shadow" alt="Imagen del vehículo" style="max-height: 350px; object-fit: contain; width: 100%;">
-                </div>
+        <!-- Columna para el card de la placa -->
+        <div class="col-md-3 d-flex align-items-center justify-content-center mt-4 mt-md-0">
+            <div class="card shadow-lg w-100 p-3">
+                <h4 class="text-center mb-3 text-primary">Información de la Placa</h4>
                 
+                <!-- Mostrar placa detectada e imagen de la placa -->
+                {% if placa_vehiculo %}
                 <div class="text-center">
-                    {% if placa_vehiculo %}
-                    <h5 class="mb-3">Placa detectada: <strong>{{ placa_vehiculo }}</strong></h5>
-                    <img src="{{ url_imagen_recorte_placa }}" class="img-fluid rounded shadow" alt="Imagen de la placa" style="max-height: 150px; object-fit: contain; width: 50%;">
-                    {% else %}
-                    <p class="text-muted">No se ha detectado ninguna placa en la imagen.</p>
-                    {% endif %}
+                    <img src="{{ url_imagen_recorte_placa }}" class="img-fluid rounded shadow mt-3" alt="Imagen de la placa" style="max-height: 150px; object-fit: contain; width: 50%;">
+                    <h5>Placa detectada: <strong>{{ placa_vehiculo }}</strong></h5>
                 </div>
                 {% else %}
-                <!-- Mostrar imagen predeterminada si no hay una imagen subida -->
-                <div class="text-center mb-4">
-                    <img src="{% static 'no_hay_vehiculo.png' %}" class="img-fluid rounded shadow" alt="Sin imagen del vehículo" style="max-height: 350px; object-fit: contain; width: 100%;">
-                    <p class="text-muted mt-3">Aún no has subido ninguna imagen.</p>
-                </div>
+                <p class="text-center text-muted">No se ha detectado ninguna placa en la imagen.</p>
                 {% endif %}
 
-                <!-- Mensajes de alerta sobre el estado del vehículo -->
-                <div class="mt-4">
-                    {% if vehiculo_existe %}
-                    <div class="alert alert-success" role="alert">
-                        <strong>¡Vehículo encontrado!</strong> Ya existe en el sistema. Realiza el ingreso <a href="#" class="alert-link">aquí</a>.
-                    </div>
-                    {% elif vehiculo_existe == False %}
-                    <div class="alert alert-warning" role="alert">
-                        <strong>Vehículo no encontrado.</strong> Regístralo <a href="#" class="alert-link">aquí</a>.
-                    </div>
-                    {% endif %}
+                <!-- Mensaje de estado del vehículo dentro del card -->
+                {% if vehiculo_existe %}
+                <div class="alert alert-success text-center mt-4" role="alert">
+                    <strong>¡Vehículo encontrado!</strong> Ya existe en el sistema. Realiza el ingreso <a href="#" class="alert-link">aquí</a>.
                 </div>
+                {% elif vehiculo_existe == False %}
+                <div class="alert alert-danger text-center mt-4" role="alert">
+                    <strong>Vehículo no encontrado.</strong> Regístralo <a href="#" class="alert-link">aquí</a>.
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
