@@ -3,7 +3,9 @@ from . import views
 
 urlpatterns = [
     path('', views.parkingadmin , name="parkingadmin"), 
+    path('lectura_placa_vehiculo/', views.lectura_placa_vehiculo, name="lectura_placa_vehiculo"),
     path('ingreso_vehiculo/', views.ingreso_vehiculo, name="ingreso_vehiculo"),
+    path('egreso_vehiculo/', views.egreso_vehiculo, name="egreso_vehiculo"),
 ]
 
 #Vehiculos:

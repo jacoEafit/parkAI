@@ -4,12 +4,13 @@ from .models import Vehiculo,Ingreso,Egreso
 from . import helpers
 from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
+from django.http import HttpResponse
 
 def parkingadmin(request):
     return render(request,'parkingadmin.html')
 
 
-def ingreso_vehiculo(request):
+def lectura_placa_vehiculo(request):
     #Si ingresan una imagen 
     if request.method == 'POST' and request.FILES['image']:
         #Se obtiene imagen vehiculo desde templates:
@@ -43,11 +44,60 @@ def ingreso_vehiculo(request):
 
         #Se renderiza nuevo template con respectivo contexto sobre nuevo ingreso
         context = {"vehiculo_existe":vehiculo_existe,"url_imagen_vehiculo":url_imagen_vehiculo,"url_imagen_recorte_placa":url_imagen_recorte_placa,"placa_vehiculo":placa_vhc_ingreso}
-        return render(request,'ingreso_vehiculo.html',context=context)
+        return render(request,'lectura_placa_vehiculo.html',context=context)
 
     #Si no han ingresado imagen
     elif request.method == 'GET':
-        return render(request,'ingreso_vehiculo.html')
+        return render(request,'lectura_placa_vehiculo.html')
+
+
+
+
+"Vista que registra el ingreso del vehículo"
+def ingreso_vehiculo(request):
+    ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
+    placa = request.GET.get('placa')
+
+    # Verificar si ambos parámetros fueron proporcionados
+    if ruta_imagen_vehiculo and placa:
+        #Se valida si dicho vehículo existe en base de datos:
+        try:
+            vehiculo = Vehiculo.objects.get(vhc_placa = placa)
+        except ObjectDoesNotExist:
+            return HttpResponse("Error: Esa placa no se encuentra registrada", status=400)
+
+        nuevo_ingreso = Ingreso(ing_vehiculo_id = vehiculo, ing_placa_vehiculo=placa, ing_fecha_hora=timezone.now(), ing_imagen_vehiculo=ruta_imagen_vehiculo)
+        nuevo_ingreso.save()
+        context = {'ingreso':nuevo_ingreso}
+        return render(request,'ingreso_succes.html',context=context)
+
+    else: return HttpResponse("Error: No se obtuvieron correctamente los parámetros", status=400)
+
+
+
+
+"Vista que registra el egreso del vehículo y genera cobro"
+def egreso_vehiculo(request):
+    ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
+    placa = request.GET.get('placa')
+
+    # Verificar si ambos parámetros fueron proporcionados
+    if ruta_imagen_vehiculo and placa:
+        #Se valida si dicho vehículo existe en base de datos:
+        try:
+            vehiculo = Vehiculo.objects.get(vhc_placa = placa)
+        except ObjectDoesNotExist:
+            return HttpResponse("Error: Esa placa no se encuentra registrada", status=400)
+
+        nuevo_egreso = Egreso(egr_vehiculo_id = vehiculo, egr_placa_vehiculo=placa, egr_fecha_hora=timezone.now(), egr_imagen_vehiculo=ruta_imagen_vehiculo)
+        nuevo_egreso.save()
+        context = {'egreso':nuevo_egreso}
+        return render(request,'egreso_succes.html',context=context)
+
+    else: return HttpResponse("Error: No se obtuvieron correctamente los parámetros", status=400)
+
+
+
 
 
 

@@ -1,0 +1,24 @@
+<div class="container mt-5">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">¡Ingreso creado con éxito!</h4>
+        <p>Se ha registrado el ingreso del vehículo con la siguiente información:</p>
+    </div>
+
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ ingreso.ing_imagen_vehiculo.url }}" class="img-fluid rounded-start" alt="Imagen del Vehículo">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Información del Ingreso</h5>
+                    <p class="card-text"><strong>ID de Ingreso:</strong> {{ ingreso.ing_id }}</p>
+                    <p class="card-text"><strong>Placa del Vehículo:</strong> {{ ingreso.ing_placa_vehiculo }}</p>
+                    <p class="card-text"><strong>Fecha y Hora:</strong> {{ ingreso.ing_fecha_hora }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-primary">Volver a la página principal</a>
+</div>

@@ -52,8 +52,14 @@
                 <!-- Mensaje de estado del vehículo dentro del card -->
                 {% if vehiculo_existe %}
                 <div class="alert alert-success text-center mt-4" role="alert">
-                    <strong>¡Vehículo encontrado!</strong> Ya existe en el sistema. Realiza el ingreso <a href="#" class="alert-link">aquí</a>.
+                    <strong>¡Vehículo encontrado!</strong> Ya existe en el sistema.<a href="#" class="alert-link"></a>.
                 </div>
+                <div class="text-center mt-4">
+                    <!-- Link que envía url imagen y placa a través del request a url 'ingreso_vehiculo' ó 'egreso_vehiculo' -->
+                    <a href="{% url 'ingreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-success" role="button">Ingreso</a>
+                    <a href="{% url 'egreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-danger" role="button">Salida</a>
+                </div>
+
                 {% elif vehiculo_existe == False %}
                 <div class="alert alert-danger text-center mt-4" role="alert">
                     <strong>Vehículo no encontrado.</strong> Regístralo <a href="#" class="alert-link">aquí</a>.
