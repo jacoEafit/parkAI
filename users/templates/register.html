@@ -10,29 +10,41 @@
 
   <div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
     <h2 class="mb-3">Regístrate</h2>
-    <div class="card shadow p-4 bg-body rounded" style="width: 28rem;">
+    
+
+    {% if messages %}
+      <ul class="messages list-unstyled my-1 p-0">
+        {% for message in messages %}
+          <li class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} py-2 px-3 my-1"> 
+            {{ message }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    
+    <div class="card shadow p-3 bg-body rounded" style="width: 22rem;"> 
       <div class="card-body">
         <form method="POST">
           {% csrf_token %}
-          <div class="mb-4">
+          <div class="mb-2"> 
             <label for="username" class="form-label">Nombre de usuario</label>
-            <input type="text" class="form-control form-control-lg" id="username" name="username" pattern="[a-zA-Z0-9]+" title="Solo letras y números, sin espacios" required>
+            <input type="text" class="form-control form-control-sm" id="username" name="username" pattern="[a-zA-Z0-9]+" title="Solo letras y números, sin espacios" required>
           </div>
-          <div class="mb-4">
+          <div class="mb-2">
             <label for="exampleInputEmail1" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" name="email" required>
+            <input type="email" class="form-control form-control-sm" id="exampleInputEmail1" name="email" required>
           </div>
-          <div class="mb-4">
+          <div class="mb-2">
             <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-            <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" name="password1" required>
+            <input type="password" class="form-control form-control-sm" id="exampleInputPassword1" name="password1" required>
           </div>
-          <div class="mb-4">
+          <div class="mb-2">
             <label for="exampleInputPassword2" class="form-label">Confirma tu contraseña</label>
-            <input type="password" class="form-control form-control-lg" id="exampleInputPassword2" name="password2" required>
+            <input type="password" class="form-control form-control-sm" id="exampleInputPassword2" name="password2" required>
           </div>
-          <button type="submit" class="btn btn-primary btn-lg w-100">Finalizar registro</button>
+          <button type="submit" class="btn btn-primary btn-sm w-100">Finalizar registro</button>
         </form>
-        <div class="mt-4 text-center">
+        <div class="mt-2 text-center">
           <p>¿Ya eres usuario? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
         </div>
       </div>
