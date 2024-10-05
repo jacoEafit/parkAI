@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm
+from .forms import RegisterForm, VehiculoForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -34,4 +34,24 @@ def register(request):
 @login_required
 def userManagement(request):
     return render(request, 'userManagement.html')
+
+@login_required
+def vehicleManagement(request):
+    if request.method == 'POST':
+        form = VehiculoForm(request.POST)
+        if form.is_valid():
+            vehiculo = form.save(commit=False)
+            vehiculo.vhc_usuario_id = request.user  # Asignar el usuario logueado
+            vehiculo.save()
+            messages.success(request, 'Vehículo agregado con éxito.')  # Mensaje de éxito
+        else:
+            # Si el formulario no es válido, puedes agregar mensajes de error
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f'Error en {field.label}: {error}')
+    
+    else:
+        form = VehiculoForm()
+
+    return render(request, 'vehicleManagement.html', {'form': form})
 
