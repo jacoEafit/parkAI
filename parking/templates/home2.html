@@ -1,0 +1,94 @@
+{% extends 'base_parkingadmin.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static 'parkinglot.png' %}" alt="Descripción de la imagen" class="d-block w-100">
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <h1>Optimiza tu Parqueadero con Tecnología de Vanguardia.</h1>
+            <p>Descubre cómo nuestra aplicación web utiliza visión artificial para leer placas de carros y detectar espacios vacíos, mejorando la eficiencia y seguridad de tu parqueadero.</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Registrate ahora</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'cams.png' %}" alt="Descripción de la imagen" class="d-block w-100">
+        <div class="container">
+          <div class="carousel-caption">
+            <h1>Gestión Inteligente de Parqueaderos.</h1>
+            <p>Simplifica la administración de tu parqueadero con nuestra solución avanzada que combina lectura automática de placas y detección de espacios vacíos, todo en una plataforma fácil de usar.</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Ver más</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'datacenter.png' %}" alt="Descripción de la imagen" class="d-block w-100">
+        <div class="container">
+          <div class="carousel-caption text-end">
+            <h1>Aumenta la Seguridad y Eficiencia de tu Parqueadero.</h1>
+            <p>Implementa nuestra tecnología de visión artificial para monitorear y gestionar tu parqueadero en tiempo real, asegurando una experiencia fluida y segura para tus clientes.</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Registrate ahora</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- /.container2 -->
+  <div class="container marketing">
+
+    <!-- /.container3 -->
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Gestión eficiente de parqueaderos. <span class="text-muted">Pruébalo ahora.</span></h2> 
+        <p class="lead">Simplifica la administración de tu parqueadero con nuestra aplicación web. La detección automática de espacios vacíos y la lectura de placas de carros facilitan la gestión diaria, permitiéndote optimizar el uso del espacio y mejorar la experiencia de tus clientes.</p>
+      </div>
+      <div class="col-md-5">
+        <img src="{% static 'imagen_parqueadero1.png' %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" alt="imagen">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">Seguridad garantizada. <span class="text-muted">Confía en nosotros.</span></h2> 
+        <p class="lead">Con nuestra aplicación web, la seguridad de tu parqueadero está en buenas manos. La lectura de placas de carros y la detección de espacios vacíos se realizan de manera automática, mejorando la vigilancia y reduciendo riesgos. ¡Protege tu parqueadero con nuestra tecnología!</p>
+      </div>
+      <div class="col-md-5 order-md-1">
+        <img src="{% static 'imagen_seguridad.png' %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" alt="imagen">
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Innovación con visión artificial. <span class="text-muted">Descúbrelo tú mismo.</span></h2>
+        <p class="lead">Nuestra aplicación web utiliza tecnología avanzada de visión artificial para leer placas de carros y detectar espacios vacíos. Esta innovación permite una administración más precisa y eficiente de tu parqueadero, optimizando cada rincón disponible.</p>
+      </div>
+      <div class="col-md-5">
+        <img src="{% static 'imagen_ia.png' %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" alt="imagen">
+      </div>
+    </div>
+
+    
+  </div><!-- /.container -->
+{% endblock %}

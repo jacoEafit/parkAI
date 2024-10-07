@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from parkingadmin.models import Vehiculo  # Importa el modelo Vehiculo
+import re  # Importa el módulo re para expresiones regulares
 
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
@@ -24,3 +26,24 @@ class RegisterForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise ValidationError("Las contraseñas no coinciden.")
         return password2
+
+class VehiculoForm(forms.ModelForm):
+    class Meta:
+        model = Vehiculo
+        fields = ['vhc_placa']  # Solo incluimos el campo vhc_placa en el formulario
+
+    def clean_vhc_placa(self):
+        vhc_placa = self.cleaned_data.get('vhc_placa')
+        
+        # Validar que el campo no esté vacío
+        if not vhc_placa:
+            raise forms.ValidationError("El campo 'Placa' no puede estar vacío.")
+        
+        # Convertir a minúsculas
+        vhc_placa = vhc_placa.lower()
+        
+        # Validar que no contenga espacios y solo letras y números
+        if not re.match(r'^[a-zA-Z0-9]+$', vhc_placa):
+            raise forms.ValidationError("La placa solo puede contener letras y números, sin espacios.")
+        
+        return vhc_placa

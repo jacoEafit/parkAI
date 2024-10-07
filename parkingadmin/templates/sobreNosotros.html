@@ -1,0 +1,53 @@
+{% extends 'base_home.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+</head>
+
+<div class="container p-4" style="text-align: center;">
+    <h1 class="p-3" data-aos="fade-up" data-aos-delay="100">Sobre nosotros</h1>
+    <img data-aos="fade-up" data-aos-delay="100" src="{% static 'parkAI_logo_completo_opuesto.png'%}" alt="Logo de parkAI" />
+</div>
+<div class="container p-4" >
+        
+<div style="border-bottom: 2px solid #666666; width: 100%; margin: 20px 0;" data-aos="fade-up" data-aos-delay="0"></div>
+
+<div class="container marketing">
+    <!-- /.container3 -->
+    <div class="row featurette p-3" data-aos="fade-up" data-aos-delay="0">
+    <div class="col-md-7">
+        <h2 class="featurette-heading">Nuestra misión</h2>
+        <br></br> 
+        <p class="lead">Convertirnos en la solución líder para la gestión inteligente de estacionamientos, facilitando a los conductores el pago de las tarifas y la búsqueda eficiente de espacios en cualquier parqueadero. Aspiramos a expandir parkAI globalmente, ayudando a optimizar el uso de espacios de estacionamiento, reduciendo la congestión vehicular    y promoviendo prácticas de movilidad más sostenibles.</p>
+    </div> 
+    <div class="col-md-5">
+        <img src="{% static 'mision.png' %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" alt="imagen">
+    </div>
+    </div>
+
+    <div style="border-bottom: 2px solid #666666; width: 100%; margin: 20px 0;" data-aos="fade-up" data-aos-delay="0"></div>
+
+    <div class="row featurette p-3" data-aos="fade-up" data-aos-delay="0">
+    <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading" >Visión</h2> 
+        <br></br>
+        <p class="lead" c>Proporcionar una plataforma web confiable y accesible que facilite a los conductores la localización de espacios de estacionamiento en tiempo real mediante tecnologías de inteligencia artificial y visión por computadora. Nuestro sistema automatiza la identificación de espacios vacíos y el procesamiento de pagos, ofreciendo una experiencia fluida, eficiente y segura tanto para los usuarios como para los administradores de parqueaderos. Cumplimos con normativas legales y estándares tecnológicos, asegurando la integridad y seguridad de las transacciones.</p>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <img src="{% static 'imagen_seguridad.png' %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" alt="imagen">
+    </div>
+    </div>      
+</div>
+    
+  <!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+
+{% endblock %}
+  

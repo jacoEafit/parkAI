@@ -6,9 +6,11 @@ from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from django.http import HttpResponse
 
-def parkingadmin(request):
-    return render(request,'parkingadmin.html')
+def home(request):
+    return render(request,'home.html')
 
+def sobreNosotros(request):
+    return render(request, 'sobreNosotros.html')
 
 def lectura_placa_vehiculo(request):
     #Si ingresan una imagen 
