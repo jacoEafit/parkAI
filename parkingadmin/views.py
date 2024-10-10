@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Vehiculo,Ingreso,Egreso
+from .models import Vehiculo,Ingreso,Egreso,Organizacion,Parqueadero,Zona,Conjunto_celdas,Celda
 from . import helpers
 from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from django.http import HttpResponse
+
 
 def home(request):
     return render(request,'home.html')
@@ -101,5 +103,45 @@ def egreso_vehiculo(request):
 
 
 
+"""Vista que permite el manejo de parqueaderos de cada usuario"""
+def parking_management(request):
+    #usuario = request.user
+    #organizacion = Organizacion.objects.get(org_id = usuario)
+    #parqueaderos = Parqueadero.objects.filter(prq_organizacion_id = organizacion)
 
+    #parqueaderos = Parqueadero.objects.all()
+    parqueaderos = ['parqueadero vegas','parqueadero regional1']
+    context = {'parqueaderos':parqueaderos}
+    return render(request,'parking_management.html',context = context)
+
+
+
+
+
+def informacion_parqueadero(request,parqueadero_id):
+    """
+    parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
+    zonas = Zona.objects.filter(zna_parqueadero_id = parqueadero)
+
+    info_zonas = [{
+              'zona1':info_zona1,
+              'conjunto_celdas':{'cjn1':[celda1,celda2,celda3],'cjn2':[celda4,celda5]}
+              }]
+    
+    """
+
+
+
+
+"""Vista para creación de parqueaderos"""
+def crear_parqueadero(request):
+    if request.method == "POST":
+        nombre_parqueadero = request.POST.get('nombre_parqueadero')
+        precio_dia = float(request.POST.get('precio_dia'))
+        precio_hora = float(request.POST.get('precio_dia'))
+        organizacion = Organizacion.objects.get(org_id = request.user)
+        direccion = request.POST.get('direccion')
+        return redirect(reverse('parking_management'))
+
+    return render(request,'crear_parqueadero.html')
 

@@ -22,7 +22,8 @@ class Parqueadero(models.Model):
     prq_estado = models.CharField(max_length=15, choices=OPCIONES_ESTADO_PARQUEADERO, default='Activo')
     prq_precio_dia = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     prq_precio_hora = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    prq_universidad_id = models.ForeignKey(Organizacion, on_delete=models.CASCADE, default=None)
+    prq_organizacion_id = models.ForeignKey(Organizacion, on_delete=models.CASCADE, default=None)
+    prq_direccion_parqueadero = models.CharField(max_length=300, default="")
 
 
 
@@ -30,13 +31,15 @@ class Parqueadero(models.Model):
 class Zona(models.Model):
     zna_id = models.AutoField(primary_key=True)
     zna_parqueadero_id = models.ForeignKey(Parqueadero, on_delete=models.CASCADE, default=None)
+    zna_nombre_zona = models.CharField(max_length=100, default="")
 
 
 
 
 class Conjunto_celdas(models.Model):
     cnj_id = models.AutoField(primary_key=True)
-    cnj_parqueadero_id = models.ForeignKey(Zona, on_delete=models.CASCADE,default=None)
+    cnj_zona_id = models.ForeignKey(Zona, on_delete=models.CASCADE,default=None)
+    cnj_nombre_conjunto = models.CharField(max_length=50, default="")
 
 
 

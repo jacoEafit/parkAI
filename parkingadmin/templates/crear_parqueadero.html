@@ -1,0 +1,46 @@
+{% extends "base_home.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Crear Parqueadero</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-4">  <!-- Cambié el tamaño de la columna para hacer el card más pequeño -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'crear_parqueadero' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nombre_parqueadero" class="form-label">Nombre del Parqueadero</label>
+                            <input type="text" class="form-control form-control-sm" id="nombre_parqueadero" name="nombre_parqueadero" placeholder="" required style="max-width: 350px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio_dia" class="form-label">Precio por Día</label>
+                            <input type="number" step="0.01" class="form-control form-control-sm" id="precio_dia" name="precio_dia" placeholder="$" required style="max-width: 350px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio_hora" class="form-label">Precio por Hora</label>
+                            <input type="number" step="0.01" class="form-control form-control-sm" id="precio_hora" name="precio_hora" placeholder="$" required style="max-width: 350px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control form-control-sm" id="direccion" name="direccion" placeholder="" required style="max-width: 350px;">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-success" style="max-width: 150px; margin: auto;">Crear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+
