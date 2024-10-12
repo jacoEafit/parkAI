@@ -10,4 +10,6 @@ urlpatterns = [
     path('parking_management/', views.parking_management, name="parking_management"),
     path('parking_management/<int:parqueadero_id>/', views.informacion_parqueadero, name="informacion_parqueadero"),
     path('parking_management/crear_parqueadero/',views.crear_parqueadero, name="crear_parqueadero"),
+    path('parking_management/crear_zona/<int:parqueadero_id>/',views.crear_zona, name="crear_zona"),
+    path('parking_management/crear_conjunto_celdas/<int:zona_id>/',views.crear_conjunto_celdas, name="crear_conjunto_celdas"),
 ]

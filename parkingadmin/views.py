@@ -109,8 +109,7 @@ def parking_management(request):
     #organizacion = Organizacion.objects.get(org_id = usuario)
     #parqueaderos = Parqueadero.objects.filter(prq_organizacion_id = organizacion)
 
-    #parqueaderos = Parqueadero.objects.all()
-    parqueaderos = ['parqueadero vegas','parqueadero regional1']
+    parqueaderos = Parqueadero.objects.all()
     context = {'parqueaderos':parqueaderos}
     return render(request,'parking_management.html',context = context)
 
@@ -119,16 +118,42 @@ def parking_management(request):
 
 
 def informacion_parqueadero(request,parqueadero_id):
-    """
+    
     parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
     zonas = Zona.objects.filter(zna_parqueadero_id = parqueadero)
-
-    info_zonas = [{
-              'zona1':info_zona1,
-              'conjunto_celdas':{'cjn1':[celda1,celda2,celda3],'cjn2':[celda4,celda5]}
-              }]
     
-    """
+    lista_zonas = []
+    
+    for zona in zonas:
+        dic_zona = {
+            'info_zona':zona,
+            'conjunto_celdas':[]
+        }
+
+        #Obtener conjunto de celdas asociadas a zona
+        conjunto_celdas = Conjunto_celdas.objects.filter(cnj_zona_id=zona)
+        for cnj in conjunto_celdas:
+            dic_cnj_celda = {
+                'info_conjunto': cnj,
+                'celdas':[]
+            }
+
+            #Obtener celdas asociadas a conjunto
+            celdas = Celda.objects.filter(cld_conjunto_celdas_id = cnj)
+            for celda in celdas:
+                #Añadir celdas asociadas a conjunto de celda
+                dic_cnj_celda['celdas'].append({'info_celda':celda})
+            
+            #Añadir conjunto de celdas a zona
+            dic_zona['conjunto_celdas'].append(dic_cnj_celda)
+        
+        #Añadir zona a listado de zonas
+        lista_zonas.append(dic_zona)
+
+
+    
+    return render(request,'informacion_parqueadero.html',{'parqueadero': parqueadero, 'info_zonas': lista_zonas})
+    
 
 
 
@@ -139,9 +164,52 @@ def crear_parqueadero(request):
         nombre_parqueadero = request.POST.get('nombre_parqueadero')
         precio_dia = float(request.POST.get('precio_dia'))
         precio_hora = float(request.POST.get('precio_dia'))
-        organizacion = Organizacion.objects.get(org_id = request.user)
+        #organizacion = Organizacion.objects.get(org_id = request.user)
+        organizacion = Organizacion.objects.get(org_nombre="Eafit")
         direccion = request.POST.get('direccion')
+        nuevo_parqueadero = Parqueadero(prq_nombre=nombre_parqueadero,prq_precio_dia=precio_dia,prq_precio_hora=precio_hora,prq_organizacion_id=organizacion,prq_direccion_parqueadero=direccion)
+        nuevo_parqueadero.save()
         return redirect(reverse('parking_management'))
 
     return render(request,'crear_parqueadero.html')
 
+
+
+
+"""Creación de conjunto de celdas. a cada conjunto de celdas le apuntará una cámara que validará cuantos parqueaderos se encuentran allí"""
+def crear_zona(request,parqueadero_id):
+
+    if request.method == "POST":
+        parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
+        nombre_zona = request.POST.get('nombre_zona')
+        nueva_zona = Zona(zna_parqueadero_id = parqueadero,zna_nombre_zona = nombre_zona)# Se crea el registro de la zona para el parqueadero indicado
+        nueva_zona.save()
+        return redirect('informacion_parqueadero',parqueadero_id = parqueadero_id)
+
+    return render(request,'crear_zona.html')
+
+
+
+
+def crear_conjunto_celdas(request,zona_id):
+
+    if request.method == "POST":
+        zona = Zona.objects.get(zna_id = zona_id)
+        nombre_conjunto = request.POST.get('nombre_conjunto')
+
+        #Se crea conjunto
+        nuevo_conjunto = Conjunto_celdas(cnj_zona_id=zona,cnj_nombre_conjunto=nombre_conjunto)
+        nuevo_conjunto.save()
+
+        #Se crean celdas para dicho conjunto
+        cantidad_celdas = int(request.POST.get('cantidad_celdas'))
+        nombre_cnj = nuevo_conjunto.cnj_nombre_conjunto
+        for i in range(cantidad_celdas):
+            nombre_celda = f'{nombre_cnj[0]}{i+1}'
+            nueva_celda = Celda(cld_nombre_celda=nombre_celda, cld_conjunto_celdas_id = nuevo_conjunto, cld_estado='Desocupado')
+            nueva_celda.save()
+
+        parqueadero_id = zona.zna_parqueadero_id.prq_id
+        return redirect('informacion_parqueadero',parqueadero_id = parqueadero_id)
+
+    return render(request,'crear_conjunto_celdas.html')

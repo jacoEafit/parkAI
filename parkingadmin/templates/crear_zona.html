@@ -1,0 +1,28 @@
+{% extends "base_home.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Crear zona</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-4">  <!-- Cambié el tamaño de la columna para hacer el card más pequeño -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nombre_zona" class="form-label">Nombre de la zona</label>
+                            <input type="text" class="form-control form-control-sm" id="nombre_zona" name="nombre_zona" placeholder="" required style="max-width: 350px;">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-success" style="max-width: 150px; margin: auto;">Crear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

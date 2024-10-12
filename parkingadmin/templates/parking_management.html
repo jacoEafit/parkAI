@@ -9,9 +9,9 @@
             <div class="card text-center mb-3 mx-2" style="width: 20rem;">
                 <div class="card-body">
                     <i class="fa fa-car fa-2x text-primary mb-1" aria-hidden="true"></i>
-                    <h5 class="card-title">{{ parqueadero }}</h5>
+                    <h5 class="card-title">{{ parqueadero.prq_nombre }}</h5>
                     <p class="card-text">Información de tu parqueadero al instante</p>
-                    <a href="#" class="btn btn-outline-primary">Ir ahora</a>
+                    <a href="{% url 'informacion_parqueadero' parqueadero_id=parqueadero.prq_id  %}" class="btn btn-outline-primary">Ir ahora</a>
                 </div>
             </div>
         {% endfor %}

@@ -7,7 +7,6 @@ class Organizacion(models.Model):
     org_nombre = models.CharField(max_length=40)
     org_direccion = models.CharField(max_length=255)
     org_telefono = models.CharField(max_length=20)
-    org_logo = models.ImageField(upload_to='logos/')
 
 
 
@@ -51,7 +50,7 @@ class Celda(models.Model):
         ('No disponible','No disponible')]
     
     cld_id = models.AutoField(primary_key=True)
-    cld_numero_celda = models.IntegerField() #Numero de celda dentro del parqueadero
+    cld_nombre_celda = models.CharField(max_length=40,default="") #Nombre de celda dentro del parqueadero
     cld_conjunto_celdas_id = models.ForeignKey(Conjunto_celdas, on_delete=models.CASCADE,default=None)
     cld_estado = models.CharField(max_length=20, choices=OPCIONES_ESTADO_CELDA, default='Desocupado')
 

@@ -1,0 +1,127 @@
+{% extends "base_home.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-8 mb-4">
+                <div class="card text-center bg-warning text-white rounded">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ parqueadero.prq_nombre }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de información -->
+            <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="border: 2px solid #0d6efd; height: 500px;">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="infoModalLabel">Información del parqueadero</h4>
+                            <button type="button" class="btn-close text-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Este es el estado de las celdas del parqueadero:</p>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li>
+                                    <i class="fa fa-parking fa-2x text-success" aria-hidden="true"></i>
+                                    <strong class="text-success">Desocupados:</strong> Espacios disponibles para estacionar.
+                                </li>
+                                <li>
+                                    <i class="fa fa-parking fa-2x text-danger" aria-hidden="true"></i>
+                                    <strong class="text-danger">Ocupados:</strong> Espacios que están actualmente ocupados.
+                                </li>
+                                <li>
+                                    <i class="fa fa-parking fa-2x text-primary" aria-hidden="true"></i>
+                                    <strong class="text-primary">No disponibles:</strong> Espacios que no están disponibles.
+                                </li>
+                            </ul>
+                            <p>Aquí puedes añadir más información relevante sobre los parqueaderos.</p>
+                            <p>Recuerda seguir las normas de estacionamiento y respetar los espacios asignados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- fin modal de información -->
+
+            {% for zona_data in info_zonas %}
+                <div class="col-12 col-md-8 mb-4">
+                    <div class="card p-3 position-relative">
+                        <!-- Ícono de lápiz y cierre en la esquina superior derecha -->
+                        <div class="position-absolute" style="top: 3px; right: 40px;">
+                            <a href="#">
+                                <i class="fa fa-pencil-alt fa-x text-success"></i> <!-- Ícono de lápiz -->
+                            </a>
+                        </div>
+                        <div class="position-absolute" style="top: 3px; right: 10px;">
+                            <a href="#">
+                                <i class="fa fa-trash fa-x text-danger"></i> <!-- Ícono de papelera -->
+                            </a>
+                        </div>
+                        <!-- Estilo del nombre de la zona -->
+                        <div class="bg-info text-white text-center p-2 rounded shadow-sm" style="margin-top: 13px;"> <!-- Aumentar el margen superior -->
+                            <h2 class="text-uppercase m-0">{{ zona_data.info_zona.zna_nombre_zona }}</h2>
+                        </div>
+
+                        {% for conjunto_data in zona_data.conjunto_celdas %}
+                        <div class="mt-3 d-flex align-items-center"> <!-- Usar d-flex para alinear elementos en línea -->
+                            <h3 class="m-0 text-left" style="font-family: 'Arial', sans-serif; font-size: 1.25rem; color: #d9534f; letter-spacing: 0.5px;">
+                                Subzona: {{ conjunto_data.info_conjunto.cnj_nombre_conjunto }}
+                            </h3>
+                            <a href="#" class="ms-2"> <!-- Agregar clase ms-2 para margen a la izquierda -->
+                                <i class="fa fa-pencil-alt fa-2x text-success"></i> <!-- Ícono de lápiz -->
+                            </a>
+                        </div>
+                        
+
+                        <div class="d-flex flex-wrap mt-2" style="gap: 5px;">
+                            {% for celda_data in conjunto_data.celdas %}
+                                <div style="padding: 0; margin: 0;">
+                                    <div class="d-flex align-items-center justify-content-center border bg-light" style="height: 40px; width: 60px;">
+                                        <span class="text-center">{{ celda_data.info_celda.cld_nombre_celda }}</span>
+                                        <i class="fa fa-parking fa-2x text-danger" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <hr style="border: none; border-top: 2px solid #ccc; margin-top: 20px; margin-bottom: 20px;">
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="col-12 col-md-8">
+                <div class="card text-center p-4" style="border-radius: 1rem; background-color: #d4edda; border: 3px dashed #ccc;">
+                    <h3 class="mb-3">Crear Nueva Zona</h3>
+                    <p class="mb-4">Haz clic para agregar una nueva zona.</p>
+                    <a href="{% url 'crear_zona' parqueadero.prq_id %}" class="btn btn-success">
+                        <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
+            myModal.show();
+        });
+    </script>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
