@@ -6,11 +6,15 @@
 <div class="container d-flex flex-wrap justify-content-start pt-4">
     {% if parqueaderos %}
         {% for parqueadero in parqueaderos %}
-            <div class="card text-center mb-3 mx-2" style="width: 20rem;">
+            <div class="card text-center mb-3 mx-2" style="width: 20rem; position: relative;">
+                <!-- Icono de la caneca en la esquina superior izquierda -->
+                <a href="{% url 'eliminar_parqueadero' parqueadero_id=parqueadero.prq_id  %}" class="text-danger" style="position: absolute; top: 10px; left: 10px;">
+                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                </a>
                 <div class="card-body">
                     <i class="fa fa-car fa-2x text-primary mb-1" aria-hidden="true"></i>
                     <h5 class="card-title">{{ parqueadero.prq_nombre }}</h5>
-                    <p class="card-text">Información de tu parqueadero al instante</p>
+                    <p class="card-text">{{ parqueadero.prq_direccion_parqueadero }}</p>
                     <a href="{% url 'informacion_parqueadero' parqueadero_id=parqueadero.prq_id  %}" class="btn btn-outline-primary">Ir ahora</a>
                 </div>
             </div>

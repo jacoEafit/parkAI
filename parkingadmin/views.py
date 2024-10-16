@@ -205,7 +205,7 @@ def crear_conjunto_celdas(request,zona_id):
         cantidad_celdas = int(request.POST.get('cantidad_celdas'))
         nombre_cnj = nuevo_conjunto.cnj_nombre_conjunto
         for i in range(cantidad_celdas):
-            nombre_celda = f'{nombre_cnj[0]}{i+1}'
+            nombre_celda = f'{nombre_cnj[0].upper()}{i+1}'
             nueva_celda = Celda(cld_nombre_celda=nombre_celda, cld_conjunto_celdas_id = nuevo_conjunto, cld_estado='Desocupado')
             nueva_celda.save()
 
@@ -213,3 +213,43 @@ def crear_conjunto_celdas(request,zona_id):
         return redirect('informacion_parqueadero',parqueadero_id = parqueadero_id)
 
     return render(request,'crear_conjunto_celdas.html')
+
+
+
+
+def eliminar_parqueadero(request,parqueadero_id):
+    parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
+    parqueadero.delete()
+    return redirect('parking_management')
+
+
+
+
+def eliminar_zona(request,zona_id):
+    zona = Zona.objects.get(zna_id = zona_id)
+    parqueadero_id = zona.zna_parqueadero_id.prq_id
+    zona.delete()
+    return redirect('informacion_parqueadero',parqueadero_id = parqueadero_id)
+
+
+
+
+def eliminar_conjunto_celdas(request,conjunto_celdas_id):
+    conjunto_celdas = Conjunto_celdas.objects.get(cnj_id = conjunto_celdas_id)
+    zona = conjunto_celdas.cnj_zona_id
+    parqueadero_id = zona.zna_parqueadero_id.prq_id
+    conjunto_celdas.delete()
+    return redirect('informacion_parqueadero',parqueadero_id = parqueadero_id)
+
+
+
+
+def validar_disponibilidad_celdas(request,conjunto_id):
+
+    if request.method == 'POST' and request.FILES['imagen_conjunto_celdas']:
+        #Se obtiene imagen de conjunto celdas desde templates:
+        imagen_conjunto_celdas = request.FILES['imagen_conjunto_celdas']
+        conjunto_celdas = Conjunto_celdas.objects.get(cnj_id = conjunto_id)
+        return render(request,'validar_disponibilidad_celdas.html')
+
+    return render(request,'validar_disponibilidad_celdas.html')

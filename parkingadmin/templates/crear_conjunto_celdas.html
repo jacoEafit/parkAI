@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Crear conjunto celdas</h2>
+    <h2 class="text-center mb-4">Crear subzona</h2>
     <div class="row justify-content-center">
         <div class="col-md-4">  <!-- Cambié el tamaño de la columna para hacer el card más pequeño -->
             <div class="card shadow-sm">
@@ -12,7 +12,7 @@
                         {% csrf_token %}
                         
                         <div class="mb-3">
-                            <label for="nombre_conjunto" class="form-label">Nombre conjunto de celdas</label>
+                            <label for="nombre_conjunto" class="form-label">Nombre subzona</label>
                             <input type="text" class="form-control form-control-sm" id="nombre_conjunto" name="nombre_conjunto" placeholder="" required style="max-width: 350px;">
                         </div>
 

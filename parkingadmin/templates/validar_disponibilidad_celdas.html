@@ -1,0 +1,15 @@
+{% extends "base_home.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Formulario de subida de imagen -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="image" class="form-label">Ingresa imagen de conjunto de celdas</label>
+        <input type="file" name="imagen_conjunto_celdas" id="imagen_conjunto_celdas" accept="image/*" required class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary w-100 mb-4">Subir Imagen</button>
+</form>
+{% endblock content %}
+
