@@ -35,7 +35,7 @@ def register(request):
 def userManagement(request):
     return render(request, 'userManagement.html')
 
-@login_required
+@login_required 
 def vehicleManagement(request):
     if request.method == 'POST':
         form = VehiculoForm(request.POST)
