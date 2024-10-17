@@ -3,9 +3,10 @@ from . import views
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
-    path('vehicleManagement/', views.vehicleManagement, name='vehicleManagement'),
+    path('addVehicle/', views.addVehicle, name='addVehicle'),
+    path('deleteVehicle/', views.deleteVehicle, name='deleteVehicle'),
     path('login/', views.login_view, name='login'),
     path('register', views.register, name='register'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('userManagement/', views.userManagement)
+    path('logout/', views.manualLogout, name='logout'),
+    path('userManagement/', views.userManagement, name='userManagement'),
 ]

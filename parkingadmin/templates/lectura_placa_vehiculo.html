@@ -62,7 +62,7 @@
 
                 {% elif vehiculo_existe == False %}
                 <div class="alert alert-danger text-center mt-4" role="alert">
-                    <strong>Vehículo no encontrado.</strong> Regístralo <a href="#" class="alert-link">aquí</a>.
+                    <strong>Vehículo no encontrado.</strong> Regístralo <a href="{% url 'addVehicle' %}" class="alert-link">aquí</a>.
                 </div>
                 {% endif %}
             </div>

@@ -1,0 +1,35 @@
+{% extends 'base_home.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 65vh;">  <!-- Ajusta 60px según la altura de tu footer -->
+    <h2 class="mb-3">Eliminar Vehículo</h2>
+    
+    <div class="card shadow p-3 bg-body rounded" style="width: 22rem;"> 
+      <div class="card-body">
+        {% if messages %}
+          <ul class="messages list-unstyled my-1 p-0">
+            {% for message in messages %}
+              <li class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} py-2 px-3 my-1"> 
+                {{ message }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-2"> 
+            <label for="vhc_placa" class="form-label">Placa del vehículo</label>
+            <input type="text" class="form-control form-control-sm w-100" id="vhc_placa" name="vhc_placa" pattern="[a-zA-Z0-9-]+" title="Solo letras, números y guiones, sin espacios" required>
+          </div>
+          <button type="submit" class="btn btn-danger btn-sm w-100 mt-2">Eliminar Vehículo</button>
+        </form>
+        <div class="mt-2 text-center">
+          <p>Volver a <a href="{% url 'userManagement' %}">manejo de vehículos</a></p>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
