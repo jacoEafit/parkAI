@@ -18,5 +18,5 @@ urlpatterns = [
     path('parking_management/eliminar_zona/<int:zona_id>/',views.eliminar_zona, name="eliminar_zona"),
     path('parking_management/eliminar_conjunto_celdas/<int:conjunto_celdas_id>/',views.eliminar_conjunto_celdas, name="eliminar_conjunto_celdas"),
     #Cálculo espacios vacíos
-    #path('parking_management/validar_disponibilidad_celdas/<int:conjunto_id>/',views.validar_disponibilidad_celdas, name="validar_disponibilidad_celdas"),
+    path('parking_management/validar_disponibilidad_celdas/<int:conjunto_id>/',views.validar_disponibilidad_celdas, name="validar_disponibilidad_celdas"),
 ]

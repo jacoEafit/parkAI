@@ -77,7 +77,7 @@
                             <a href="{% url 'eliminar_conjunto_celdas' conjunto_data.info_conjunto.cnj_id %}" class="text-danger me-2" title="Eliminar Subzona">
                                 <i class="fa fa-trash fa-lg"></i>
                             </a>
-                            <a href="#" class="text-primary" title="Ingresar imagen subzona">
+                            <a href="{% url 'validar_disponibilidad_celdas' conjunto_data.info_conjunto.cnj_id %}" class="text-primary" title="Ingresar imagen subzona">
                                 <i class="fa fa-camera fa-lg" aria-hidden="true"></i>
                             </a>
                         </div>

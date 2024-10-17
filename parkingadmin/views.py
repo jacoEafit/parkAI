@@ -243,7 +243,7 @@ def eliminar_conjunto_celdas(request,conjunto_celdas_id):
 
 
 
-"""
+
 def validar_disponibilidad_celdas(request,conjunto_id):
     conjunto = Conjunto_celdas.objects.get(cnj_id = conjunto_id)
 
@@ -255,7 +255,7 @@ def validar_disponibilidad_celdas(request,conjunto_id):
         nombre_imagen_conjunto_celdas = fs.save(imagen_conjunto_celdas.name, imagen_conjunto_celdas) #Guarda imagen y almacena nombre archivo
         url_imagen_conjunto_celdas = fs.url(nombre_imagen_conjunto_celdas) #Obtiene la url del archivo para poder acceder a él
 
-        return render(request,'validar_disponibilidad_celdas.html')
+        context = {'url_imagen_conjunto_celdas':url_imagen_conjunto_celdas}
+        return render(request,'validar_disponibilidad_celdas.html',context=context)
 
     return render(request,'validar_disponibilidad_celdas.html')
-"""

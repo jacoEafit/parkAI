@@ -1,15 +1,57 @@
-{% extends "base_home.html" %}
+{% extends 'base_home.html' %}
 {% load static %}
 
 {% block content %}
-<!-- Formulario de subida de imagen -->
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="image" class="form-label">Ingresa imagen de conjunto de celdas</label>
-        <input type="file" name="imagen_conjunto_celdas" id="imagen_conjunto_celdas" accept="image/*" required class="form-control">
+<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center pt-5">
+    <div class="row w-100">
+        <!-- Columna para el card principal -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center mb-4">
+            <div class="card shadow-lg w-75 p-4">
+                <h2 class="text-center mb-4 text-primary">Subir Imagen de Conjunto de Celdas</h2>
+                
+                <!-- Formulario de subida de imagen -->
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="imagen_conjunto_celdas" class="form-label">Ingresa imagen de conjunto de celdas</label>
+                        <input type="file" name="imagen_conjunto_celdas" id="imagen_conjunto_celdas" accept="image/*" required class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-4">Subir Imagen</button>
+                </form>
+
+                <!-- Mostrar imagen del conjunto de celdas en el mismo card -->
+                {% if url_imagen_celdas %}
+                <div class="text-center">
+                    <img src="{{ url_imagen_conjunto_celdas }}" class="img-fluid rounded shadow" alt="Imagen del conjunto de celdas" style="max-height: 250px; object-fit: contain; width: 100%;">
+                </div>
+                {% else %}
+                <!-- Imagen predeterminada si no se ha subido una imagen -->
+                <div class="text-center mb-4">
+                    <img src="{% static 'no_hay_vehiculo.png' %}" class="img-fluid rounded shadow" alt="Sin imagen del conjunto de celdas" style="max-height: 250px; object-fit: contain; width: 100%;">
+                    <p class="text-muted mt-3">Aún no has subido una imagen.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Columna para el card de información adicional (opcional) -->
+        <div class="col-md-3 d-flex align-items-center justify-content-center mt-4 mt-md-0">
+            <div class="card shadow-lg w-100 p-3">
+                <h4 class="text-center mb-3 text-primary">Información Adicional</h4>
+                
+                <!-- Mostrar información relacionada si está disponible -->
+                {% if informacion_celdas %}
+                <div class="text-center">
+                    <h5>Detalles del conjunto:</h5>
+                    <p>{{ informacion_celdas }}</p>
+                </div>
+                {% else %}
+                <p class="text-center text-muted">No hay información adicional disponible.</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary w-100 mb-4">Subir Imagen</button>
-</form>
+</div>
 {% endblock content %}
+
 
