@@ -89,9 +89,9 @@
                             <div style="padding: 0; margin: 0;">
                                 <div class="d-flex align-items-center justify-content-center border bg-light" style="height: 40px; width: 60px;">
                                     <span class="text-center">{{ celda_data.info_celda.cld_nombre_celda }}</span>
-                                    {% if celda_data.info_celda.cld_estado == "Ocupado" %}
+                                    {% if celda_data.info_celda.cld_estado == "occupied" %}
                                         <i class="fa fa-parking fa-2x text-danger" aria-hidden="true"></i>
-                                    {% elif celda_data.info_celda.cld_estado == "Desocupado" %}
+                                    {% elif celda_data.info_celda.cld_estado == "empty" %}
                                         <i class="fa fa-parking fa-2x text-success" aria-hidden="true"></i>
                                     {% else %}
                                         <i class="fa fa-parking fa-2x text-primary" aria-hidden="true"></i>

@@ -45,14 +45,14 @@ class Conjunto_celdas(models.Model):
 
 class Celda(models.Model):
     OPCIONES_ESTADO_CELDA = [
-        ('Ocupado', 'Ocupado'),
-        ('Desocupado', 'Desocupado'),
-        ('No disponible','No disponible')]
+        ('occupied', 'occupied'),
+        ('empty', 'empty'),
+        ('unavailable','unavailable')]
     
     cld_id = models.AutoField(primary_key=True)
     cld_nombre_celda = models.CharField(max_length=40,default="") #Nombre de celda dentro del parqueadero
     cld_conjunto_celdas_id = models.ForeignKey(Conjunto_celdas, on_delete=models.CASCADE,default=None)
-    cld_estado = models.CharField(max_length=20, choices=OPCIONES_ESTADO_CELDA, default='Desocupado')
+    cld_estado = models.CharField(max_length=20, choices=OPCIONES_ESTADO_CELDA, default='unavailable')
 
 
 

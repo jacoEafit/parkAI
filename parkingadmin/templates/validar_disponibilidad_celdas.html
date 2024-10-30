@@ -2,56 +2,91 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center pt-5">
-    <div class="row w-100">
-        <!-- Columna para el card principal -->
-        <div class="col-md-6 d-flex align-items-center justify-content-center mb-4">
-            <div class="card shadow-lg w-75 p-4">
-                <h2 class="text-center mb-4 text-primary">Subir Imagen de Conjunto de Celdas</h2>
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+    <div class="card w-75" style="background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="card-body p-4">
+
+            {% if url_imagen_conjunto_celdas %}
+                <h3 class="text-center mb-4 text-dark">Imagen subzona "{{ conjunto.cnj_nombre_conjunto }}"</h3>
                 
-                <!-- Formulario de subida de imagen -->
+                <div class="d-flex justify-content-center align-items-center mb-4" style="position: relative; max-width: 80%; margin: 0 auto;">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#imageInfoModal" style="display: inline-block;">
+                        <img src="{{ url_imagen_conjunto_celdas }}" class="img-fluid shadow-sm zoom-image" alt="Imagen de conjunto celdas" style="max-height: 250px; max-width: 100%; object-fit: contain; border: 1px solid #adb5bd; border-radius: 12px;">
+                    </a>
+                </div>
+                
+                {% if resultado_ejecucion == "prediccion_valida" %}
+                    <p>Cantidad de predicciones válida, ¿quiéres actualizar el estado de las celdas?</p>
+                    <a href="{% url 'validar_disponibilidad_celdas' conjunto_id=conjunto.cnj_id %}" class="btn btn-outline-danger px-4" style="min-width: 150px;">Cancelar</a>
+                    <a href="#" onclick="enviarArregloPredicciones()" class="btn btn-outline-success px-4" style="min-width: 150px;">Actualizar</a>
+                {% else %}
+                    <p>Cantidad de predicciones no válida</p>
+                    <a href="{% url 'validar_disponibilidad_celdas' conjunto_id=conjunto.cnj_id %}" class="btn btn-outline-danger px-4" style="min-width: 150px;">Ingresar otra imagen</a>
+                {% endif %}
+
+                <!-- Modal con más información -->
+                <div class="modal fade" id="imageInfoModal" tabindex="-1" aria-labelledby="imageInfoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageInfoModalLabel">Información de la imagen</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Esta imagen corresponde a la subzona "{{ conjunto.cnj_nombre_conjunto }}" y ha sido subida recientemente.</p>
+                                <p>Aquí puedes agregar más detalles o descripciones relacionadas con la imagen y su contexto.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <h3 class="text-center mb-4 text-dark">Carga imagen subzona "{{ conjunto.cnj_nombre_conjunto }}"</h3>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="imagen_conjunto_celdas" class="form-label">Ingresa imagen de conjunto de celdas</label>
+                    
+                    <div class="p-3 mb-4" style="background-color: #e9ecef; border-radius: 8px; border: 1px solid #ced4da;">
+                        <label for="image" class="form-label text-muted">Carga la Imagen aquí:</label>
                         <input type="file" name="imagen_conjunto_celdas" id="imagen_conjunto_celdas" accept="image/*" required class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mb-4">Subir Imagen</button>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <button type="submit" class="btn btn-outline-primary px-4" style="min-width: 150px;">Enviar</button>
+                    </div>
                 </form>
+            {% endif %}
 
-                <!-- Mostrar imagen del conjunto de celdas en el mismo card -->
-                {% if url_imagen_celdas %}
-                <div class="text-center">
-                    <img src="{{ url_imagen_conjunto_celdas }}" class="img-fluid rounded shadow" alt="Imagen del conjunto de celdas" style="max-height: 250px; object-fit: contain; width: 100%;">
-                </div>
-                {% else %}
-                <!-- Imagen predeterminada si no se ha subido una imagen -->
-                <div class="text-center mb-4">
-                    <img src="{% static 'no_hay_vehiculo.png' %}" class="img-fluid rounded shadow" alt="Sin imagen del conjunto de celdas" style="max-height: 250px; object-fit: contain; width: 100%;">
-                    <p class="text-muted mt-3">Aún no has subido una imagen.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Columna para el card de información adicional (opcional) -->
-        <div class="col-md-3 d-flex align-items-center justify-content-center mt-4 mt-md-0">
-            <div class="card shadow-lg w-100 p-3">
-                <h4 class="text-center mb-3 text-primary">Información Adicional</h4>
-                
-                <!-- Mostrar información relacionada si está disponible -->
-                {% if informacion_celdas %}
-                <div class="text-center">
-                    <h5>Detalles del conjunto:</h5>
-                    <p>{{ informacion_celdas }}</p>
-                </div>
-                {% else %}
-                <p class="text-center text-muted">No hay información adicional disponible.</p>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>
+
+<!-- Estilos adicionales -->
+<style>
+    /* Efecto de zoom suave en hover */
+    .zoom-image {
+        transition: transform 0.3s ease; /* Suavizar la transición */
+    }
+
+    .zoom-image:hover {
+        transform: scale(1.05); /* Aumentar el tamaño de la imagen */
+    }
+</style>
+
+<script>
+    function enviarArregloPredicciones() {
+        // Obtén el arreglo de diccionarios del contexto de Django
+        const arreglo_predicciones = {{ arreglo_predicciones|safe }};
+        const conjunto_id = {{ conjunto.cnj_id }};
+
+        // Convierte el arreglo en una cadena JSON y codifícalo para URL
+        const arreglo_prediccionesEncoded = encodeURIComponent(JSON.stringify(arreglo_predicciones));
+
+        // Redirige a la vista modificar_estado_celdas pasando el conjunto_id y el arreglo JSON codificado
+        window.location.href = `/parkingadmin/parking_management/modificar_estado_celdas/${conjunto_id}/${arreglo_prediccionesEncoded}/`;
+    }
+</script>
+
 {% endblock content %}
-
-

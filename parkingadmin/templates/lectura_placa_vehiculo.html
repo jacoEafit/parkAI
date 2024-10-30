@@ -2,67 +2,67 @@
 {% load static %}
 
 {% block content %}
-<div class="container min-vh-100 d-flex flex-column justify-content-center align-items-center pt-5">
-    <div class="row w-100">
-        <!-- Card principal -->
-        <div class="col-lg-7 mb-4 d-flex align-items-center justify-content-center">
-            <div class="card shadow-lg p-4 w-100">
-                <h2 class="text-center text-primary mb-3">Subir Imagen del Vehículo</h2>
-                
-                <!-- Formulario de subida de imagen -->
-                <form method="post" enctype="multipart/form-data" class="mb-4">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="image" class="form-label">Selecciona una imagen del vehículo</label>
-                        <input type="file" name="image" id="image" accept="image/*" required class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Subir Imagen</button>
-                </form>
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+    <div class="card w-75" style="background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="card-body p-4">
+            <h3 class="text-center mb-4 text-dark">Gestión del Vehículo</h3>
 
-                <!-- Mostrar imagen del vehículo -->
-                <div class="text-center">
+            <!-- Formulario de carga de imagen y resultados dinámicos -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Sección de carga de imagen -->
+                <div class="p-3 mb-4" style="background-color: #e9ecef; border-radius: 8px; border: 1px solid #ced4da;">
+                    <label for="image" class="form-label text-muted">Carga la Imagen del Vehículo:</label>
+                    <input type="file" name="image" id="image" accept="image/*" required class="form-control">
+                </div>
+
+                <!-- Vista previa de la imagen -->
+                <div class="mb-4 text-center">
                     {% if url_imagen_vehiculo %}
-                        <img src="{{ url_imagen_vehiculo }}" class="img-fluid rounded shadow" alt="Imagen del vehículo" style="max-height: 250px; object-fit: contain; width: 100%;">
+                        <img src="{{ url_imagen_vehiculo }}" class="img-fluid shadow-sm" alt="Imagen del vehículo" style="max-height: 250px; max-width: 80%; object-fit: contain; border: 1px solid #adb5bd; border-radius: 12px;">
                     {% else %}
-                        <img src="{% static 'no_hay_vehiculo.png' %}" class="img-fluid rounded shadow mb-2" alt="Sin imagen del vehículo" style="max-height: 250px; object-fit: contain; width: 100%;">
-                        <p class="text-muted">Aún no has subido una imagen.</p>
+                        <p class="text-muted">No hay imagen cargada aún.</p>
                     {% endif %}
                 </div>
-            </div>
-        </div>
 
-        <!-- Card información de la placa -->
-        <div class="col-lg-5 d-flex align-items-center justify-content-center">
-            <div class="card shadow-lg p-4 w-100">
-                <h4 class="text-center text-primary mb-3">Información de la Placa</h4>
+                <!-- Botón de envío -->
+                <div class="d-flex justify-content-center mb-4">
+                    <button type="submit" class="btn btn-outline-primary px-4" style="min-width: 150px;">Enviar</button>
+                </div>
 
-                <!-- Mostrar placa detectada -->
+                <!-- Card para los resultados de la placa y estado del vehículo -->
                 {% if placa_vehiculo %}
-                    <div class="text-center mb-3">
-                        <img src="{{ url_imagen_recorte_placa }}" class="img-fluid rounded shadow" alt="Imagen de la placa" style="max-height: 100px; object-fit: contain;">
-                        <h5 class="mt-2">Placa detectada: <strong>{{ placa_vehiculo }}</strong></h5>
-                    </div>
-                {% else %}
-                    <p class="text-center text-muted">No se ha detectado ninguna placa en la imagen.</p>
-                {% endif %}
+                <div class="card mb-4" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body p-3 text-center">
+                        <img src="{{ url_imagen_recorte_placa }}" class="img-fluid shadow-sm mb-2" alt="Imagen de la placa" style="height: auto; max-height: 200px; object-fit: contain; width: auto; max-width: 100%; border-radius: 3px;">
+                        <h5 class="mb-3 text-dark">Placa Detectada: <strong>{{ placa_vehiculo }}</strong></h5>
 
-                <!-- Mensajes de estado del vehículo -->
-                {% if vehiculo_existe %}
-                    <div class="alert alert-success text-center mt-4">
-                        <strong>¡Vehículo encontrado!</strong> Ya existe en el sistema.
+                        <!-- Estado del vehículo y acciones -->
+                        <div>
+                            {% if vehiculo_existe %}
+                                <div class="alert alert-info text-center">
+                                    <strong>¡Vehículo encontrado!</strong> Ya está registrado.
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <a href="{% url 'ingreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-success me-2">Registrar Ingreso</a>
+                                    <a href="{% url 'egreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-danger">Registrar Salida</a>
+                                </div>
+                            {% elif vehiculo_existe == False %}
+                                <div class="alert alert-warning text-center">
+                                    <strong>Vehículo no encontrado.</strong> ¿Deseas registrarlo? <a href="{% url 'addVehicle' %}" class="alert-link">Haz clic aquí.</a>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="text-center mt-3">
-                        <a href="{% url 'ingreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-success me-2">Ingreso</a>
-                        <a href="{% url 'egreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-danger">Salida</a>
-                    </div>
-                {% elif vehiculo_existe == False %}
-                    <div class="alert alert-danger text-center mt-4">
-                        <strong>Vehículo no encontrado.</strong> Regístralo <a href="#" class="alert-link">aquí</a>.
+                </div>
+                {% elif url_imagen_vehiculo and not placa_vehiculo %}
+                    <div class="alert alert-danger text-center">
+                        <strong>No se detectó ninguna placa en la imagen cargada.</strong>
                     </div>
                 {% endif %}
-            </div>
+            </form>
         </div>
     </div>
 </div>
 {% endblock content %}
-

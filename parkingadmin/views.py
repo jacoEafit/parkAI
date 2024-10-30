@@ -3,9 +3,11 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Vehiculo,Ingreso,Egreso,Organizacion,Parqueadero,Zona,Conjunto_celdas,Celda
 from . import helpers
+from . import helpers2
 from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from django.http import HttpResponse
+import json
 
 
 def home(request):
@@ -255,7 +257,44 @@ def validar_disponibilidad_celdas(request,conjunto_id):
         nombre_imagen_conjunto_celdas = fs.save(imagen_conjunto_celdas.name, imagen_conjunto_celdas) #Guarda imagen y almacena nombre archivo
         url_imagen_conjunto_celdas = fs.url(nombre_imagen_conjunto_celdas) #Obtiene la url del archivo para poder acceder a él
 
-        context = {'url_imagen_conjunto_celdas':url_imagen_conjunto_celdas}
+        context = {'url_imagen_conjunto_celdas':url_imagen_conjunto_celdas, 'conjunto':conjunto}
+
+        #Procesamiento de la imagen para detección de espacios vacíos:
+        resultados_ejecucion_prediccion = helpers2.ejecucion_helpers2(ruta_imagen = 'media/'+nombre_imagen_conjunto_celdas, nombre_imagen_conjunto_celdas=nombre_imagen_conjunto_celdas,conjunto_celdas_id=conjunto_id)
+        
+        #Si resultados de predicción son válidos
+        if resultados_ejecucion_prediccion['cambiar_celdas'] == True:
+            arreglo_predicciones = resultados_ejecucion_prediccion['arreglo_predicciones']#Se obtienen predicciones
+            context['resultado_ejecucion'] = "prediccion_valida"
+            context['arreglo_predicciones'] = arreglo_predicciones
+        else:
+            context['resultado_ejecucion'] = "prediccion_erronea"
+
+        
         return render(request,'validar_disponibilidad_celdas.html',context=context)
 
-    return render(request,'validar_disponibilidad_celdas.html')
+    context = {'conjunto':conjunto}
+    return render(request,'validar_disponibilidad_celdas.html',context=context)
+
+
+
+
+def modificar_estado_celdas(request,conjunto_id,predicciones):
+    
+    # Decodifica el JSON de predicciones
+    predicciones = json.loads(predicciones)
+
+    conjunto_celdas = Conjunto_celdas.objects.get(cnj_id = conjunto_id)
+    celdas = Celda.objects.filter(cld_conjunto_celdas_id = conjunto_celdas)
+    zona = Zona.objects.get(zna_id = conjunto_celdas.cnj_zona_id.zna_id)
+    parqueadero = Parqueadero.objects.get(prq_id = zona.zna_parqueadero_id.prq_id) 
+
+    #Se modifica el estado de las celdas
+    i = 0
+    for celda in celdas:
+        celda.cld_estado = predicciones[i]['class']
+        celda.save()
+        print(celda.cld_estado)        
+        i = i+1
+    
+    return redirect('informacion_parqueadero',parqueadero_id = parqueadero.prq_id)
