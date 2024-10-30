@@ -1,6 +1,10 @@
 import base64
 from inference_sdk import InferenceHTTPClient
 from .models import Conjunto_celdas, Celda
+import io
+import os
+from PIL import Image, ImageDraw
+from django.core.files.storage import FileSystemStorage
 
 
 "Función que envía imagen a roboflow y devuelve cantidad espacios vacíos y ocupados"
@@ -73,11 +77,51 @@ def organizar_predicciones(arreglo_predicciones):
 
 
 
+"""Función que pinta predicciones detectadas en imagen"""
+def dibujar_predicciones(ruta_imagen,nombre_imagen,predicciones):
+    # Cargar la imagen original
+    imagen = Image.open(ruta_imagen)
+    draw = ImageDraw.Draw(imagen)
+
+    # Dibujar las predicciones
+    for prediccion in predicciones:
+        x_centro = prediccion['x']
+        y_centro = prediccion['y']
+        ancho = prediccion['width']
+        alto = prediccion['height']
+
+        # Calcular las coordenadas del rectángulo
+        x0 = x_centro - ancho / 2
+        y0 = y_centro - alto / 2
+        x1 = x_centro + ancho / 2
+        y1 = y_centro + alto / 2
+
+        # Color basado en el estado
+        color = 'red' if prediccion['class'] == 'occupied' else 'green'
+        
+        # Dibujar el rectángulo
+        draw.rectangle([x0, y0, x1, y1], outline=color, width=3)
+
+    # Guardar la imagen modificada en media usando FileSystemStorage
+    fs = FileSystemStorage(location='media')
+    nombre_imagen_procesada = f"{os.path.splitext(nombre_imagen)[0]}_procesada.png"
+    
+    # Guardar la imagen
+    with fs.open(nombre_imagen_procesada, 'wb') as archivo_guardado:
+        imagen.save(archivo_guardado, format="PNG")
+    
+    return nombre_imagen_procesada
+
+
+
+
+
 """Función que llama a las funciones anteriores para detectar espacios vacíos y devuelve arreglo con resultados de ejecución"""
 def ejecucion_helpers2(ruta_imagen, nombre_imagen_conjunto_celdas, conjunto_celdas_id):
 
     arreglo_predicciones = detectar_espacios_vacios_y_ocupados(ruta_imagen)
     arreglo_predicciones = eliminar_predicciones_bajo_umbral(arreglo_predicciones=arreglo_predicciones)
+    nombre_imagen_con_bnd_boxes = dibujar_predicciones(ruta_imagen = ruta_imagen, nombre_imagen = nombre_imagen_conjunto_celdas, predicciones = arreglo_predicciones) 
     #zona testing
     confianzas = [prediccion['confidence'] for prediccion in arreglo_predicciones]
     print(f'cantidad predicciones: {len(arreglo_predicciones)}')
@@ -85,9 +129,9 @@ def ejecucion_helpers2(ruta_imagen, nombre_imagen_conjunto_celdas, conjunto_celd
     #fin zona testing
     if prediccion_valida(arreglo_predicciones,conjunto_celdas_id):
         arreglo_predicciones = organizar_predicciones(arreglo_predicciones)
-        return {'arreglo_predicciones':arreglo_predicciones,'cambiar_celdas':True}
+        return {'arreglo_predicciones':arreglo_predicciones,'cambiar_celdas':True,'nombre_imagen_con_bnd_boxes':nombre_imagen_con_bnd_boxes}
     
-    else: return {'cambiar_celdas':False}
+    else: return {'cambiar_celdas':False,'nombre_imagen_con_bnd_boxes':nombre_imagen_con_bnd_boxes}
 
 
 

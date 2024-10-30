@@ -256,13 +256,12 @@ def validar_disponibilidad_celdas(request,conjunto_id):
         fs = FileSystemStorage(location='media') #Especifíca ubicación
         nombre_imagen_conjunto_celdas = fs.save(imagen_conjunto_celdas.name, imagen_conjunto_celdas) #Guarda imagen y almacena nombre archivo
         url_imagen_conjunto_celdas = fs.url(nombre_imagen_conjunto_celdas) #Obtiene la url del archivo para poder acceder a él
-
         context = {'url_imagen_conjunto_celdas':url_imagen_conjunto_celdas, 'conjunto':conjunto}
 
         #Procesamiento de la imagen para detección de espacios vacíos:
         resultados_ejecucion_prediccion = helpers2.ejecucion_helpers2(ruta_imagen = 'media/'+nombre_imagen_conjunto_celdas, nombre_imagen_conjunto_celdas=nombre_imagen_conjunto_celdas,conjunto_celdas_id=conjunto_id)
-        
-        #Si resultados de predicción son válidos
+
+        #Si resultados de predicción son válidos:
         if resultados_ejecucion_prediccion['cambiar_celdas'] == True:
             arreglo_predicciones = resultados_ejecucion_prediccion['arreglo_predicciones']#Se obtienen predicciones
             context['resultado_ejecucion'] = "prediccion_valida"
@@ -270,6 +269,10 @@ def validar_disponibilidad_celdas(request,conjunto_id):
         else:
             context['resultado_ejecucion'] = "prediccion_erronea"
 
+        #Se obtiene imagen con bnd_boxes:
+        nombre_imagen_con_bnd_boxes = resultados_ejecucion_prediccion['nombre_imagen_con_bnd_boxes']
+        url_imagen_con_bnd_boxes = fs.url(nombre_imagen_con_bnd_boxes)
+        context['url_imagen_con_bnd_boxes'] = url_imagen_con_bnd_boxes
         
         return render(request,'validar_disponibilidad_celdas.html',context=context)
 

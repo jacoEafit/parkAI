@@ -33,8 +33,14 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p>Esta imagen corresponde a la subzona "{{ conjunto.cnj_nombre_conjunto }}" y ha sido subida recientemente.</p>
-                                <p>Aquí puedes agregar más detalles o descripciones relacionadas con la imagen y su contexto.</p>
+                                <!-- Vista de la imagen con predicciones -->
+                                <div class="mb-4 text-center">
+                                    {% if url_imagen_con_bnd_boxes %}
+                                        <img src="{{ url_imagen_con_bnd_boxes }}" class="img-fluid shadow-sm" alt="Imagen con predicciones" style="max-height: 250px; max-width: 80%; object-fit: contain; border: 1px solid #adb5bd; border-radius: 12px;">
+                                    {% else %}
+                                        <p class="text-muted">No hay imagen cargada aún.</p>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
