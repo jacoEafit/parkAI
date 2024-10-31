@@ -273,7 +273,11 @@ def validar_disponibilidad_celdas(request,conjunto_id):
         nombre_imagen_con_bnd_boxes = resultados_ejecucion_prediccion['nombre_imagen_con_bnd_boxes']
         url_imagen_con_bnd_boxes = fs.url(nombre_imagen_con_bnd_boxes)
         context['url_imagen_con_bnd_boxes'] = url_imagen_con_bnd_boxes
-        
+
+        #Se obtienen datos de predicción como cantidad celdas ocupadas y desocupadas:
+        celdas_ocupadas, celdas_desocupadas = helpers2.contar_ocupados_desocupados(resultados_ejecucion_prediccion['arreglo_predicciones'])
+        context['celdas_ocupadas'] = celdas_ocupadas
+        context['celdas_desocupadas'] = celdas_desocupadas
         return render(request,'validar_disponibilidad_celdas.html',context=context)
 
     context = {'conjunto':conjunto}

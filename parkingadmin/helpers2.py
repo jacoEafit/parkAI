@@ -135,6 +135,25 @@ def ejecucion_helpers2(ruta_imagen, nombre_imagen_conjunto_celdas, conjunto_celd
 
 
 
+
+
+
+def contar_ocupados_desocupados(arreglo_predicciones):
+    ocupados = 0
+    desocupados = 0
+
+    for prediccion in arreglo_predicciones:
+        if prediccion['class'] == "occupied":
+            ocupados += 1
+        elif prediccion['class'] == "empty":
+            desocupados += 1
+    
+    return ocupados,desocupados
+        
+
+
+
+
 {   'inference_id': '8d8bdbb9-48c1-4bca-806c-65ee372c3f5c', 
     'time': 0.044326021000415494, 
     'image': {'width': 864, 'height': 446}, 
