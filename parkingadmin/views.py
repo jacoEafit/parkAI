@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from django.http import HttpResponse
 import json
+from .decorators import organizacion_required
 
 
 def home(request):
@@ -16,6 +17,7 @@ def home(request):
 def sobreNosotros(request):
     return render(request, 'sobreNosotros.html')
 
+@organizacion_required
 def lectura_placa_vehiculo(request):
     #Si ingresan una imagen 
     if request.method == 'POST' and request.FILES['image']:
@@ -60,6 +62,7 @@ def lectura_placa_vehiculo(request):
 
 
 "Vista que registra el ingreso del vehículo"
+@organizacion_required
 def ingreso_vehiculo(request):
     ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
     placa = request.GET.get('placa')
@@ -83,6 +86,7 @@ def ingreso_vehiculo(request):
 
 
 "Vista que registra el egreso del vehículo y genera cobro"
+@organizacion_required
 def egreso_vehiculo(request):
     ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
     placa = request.GET.get('placa')
@@ -106,19 +110,19 @@ def egreso_vehiculo(request):
 
 
 """Vista que permite el manejo de parqueaderos de cada usuario"""
+@organizacion_required
 def parking_management(request):
-    #usuario = request.user
-    #organizacion = Organizacion.objects.get(org_id = usuario)
-    #parqueaderos = Parqueadero.objects.filter(prq_organizacion_id = organizacion)
+    usuario = request.user
+    organizacion = Organizacion.objects.get(org_id = usuario)
+    parqueaderos = Parqueadero.objects.filter(prq_organizacion_id = organizacion)
 
-    parqueaderos = Parqueadero.objects.all()
     context = {'parqueaderos':parqueaderos}
     return render(request,'parking_management.html',context = context)
 
 
 
 
-
+@organizacion_required
 def informacion_parqueadero(request,parqueadero_id):
     
     parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
@@ -152,8 +156,6 @@ def informacion_parqueadero(request,parqueadero_id):
         #Añadir zona a listado de zonas
         lista_zonas.append(dic_zona)
 
-
-    
     return render(request,'informacion_parqueadero.html',{'parqueadero': parqueadero, 'info_zonas': lista_zonas})
     
 
@@ -161,13 +163,13 @@ def informacion_parqueadero(request,parqueadero_id):
 
 
 """Vista para creación de parqueaderos"""
+@organizacion_required
 def crear_parqueadero(request):
     if request.method == "POST":
         nombre_parqueadero = request.POST.get('nombre_parqueadero')
         precio_dia = float(request.POST.get('precio_dia'))
         precio_hora = float(request.POST.get('precio_dia'))
-        #organizacion = Organizacion.objects.get(org_id = request.user)
-        organizacion = Organizacion.objects.get(org_nombre="Eafit")
+        organizacion = Organizacion.objects.get(org_id = request.user)
         direccion = request.POST.get('direccion')
         nuevo_parqueadero = Parqueadero(prq_nombre=nombre_parqueadero,prq_precio_dia=precio_dia,prq_precio_hora=precio_hora,prq_organizacion_id=organizacion,prq_direccion_parqueadero=direccion)
         nuevo_parqueadero.save()
@@ -179,6 +181,7 @@ def crear_parqueadero(request):
 
 
 """Creación de conjunto de celdas. a cada conjunto de celdas le apuntará una cámara que validará cuantos parqueaderos se encuentran allí"""
+@organizacion_required
 def crear_zona(request,parqueadero_id):
 
     if request.method == "POST":
@@ -192,7 +195,7 @@ def crear_zona(request,parqueadero_id):
 
 
 
-
+@organizacion_required
 def crear_conjunto_celdas(request,zona_id):
 
     if request.method == "POST":
@@ -218,7 +221,7 @@ def crear_conjunto_celdas(request,zona_id):
 
 
 
-
+@organizacion_required
 def eliminar_parqueadero(request,parqueadero_id):
     parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
     parqueadero.delete()
@@ -226,7 +229,7 @@ def eliminar_parqueadero(request,parqueadero_id):
 
 
 
-
+@organizacion_required
 def eliminar_zona(request,zona_id):
     zona = Zona.objects.get(zna_id = zona_id)
     parqueadero_id = zona.zna_parqueadero_id.prq_id
@@ -235,7 +238,7 @@ def eliminar_zona(request,zona_id):
 
 
 
-
+@organizacion_required
 def eliminar_conjunto_celdas(request,conjunto_celdas_id):
     conjunto_celdas = Conjunto_celdas.objects.get(cnj_id = conjunto_celdas_id)
     zona = conjunto_celdas.cnj_zona_id
@@ -245,7 +248,7 @@ def eliminar_conjunto_celdas(request,conjunto_celdas_id):
 
 
 
-
+@organizacion_required
 def validar_disponibilidad_celdas(request,conjunto_id):
     conjunto = Conjunto_celdas.objects.get(cnj_id = conjunto_id)
 
@@ -285,7 +288,7 @@ def validar_disponibilidad_celdas(request,conjunto_id):
 
 
 
-
+@organizacion_required
 def modificar_estado_celdas(request,conjunto_id,predicciones):
     
     # Decodifica el JSON de predicciones

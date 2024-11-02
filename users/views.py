@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, VehiculoForm, DeleteVehicleForm
 from parkingadmin.models import Vehiculo  
 from django.shortcuts import get_object_or_404, redirect, render
+from parkingadmin.models import Organizacion
+from django.db import IntegrityError
+from django.contrib.auth.models import User
 
 def login_view(request):
     if request.method == 'POST':
@@ -31,6 +34,42 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
+
+
+def organizacionRegister(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        
+        org_nombre = request.POST['org_nombre']
+        org_direccion = request.POST['org_direccion']
+        org_telefono = request.POST['org_telefono']
+        
+        try:
+            # Crear el usuario
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.save()
+            login(request, user)
+            
+            # Crear la organización y asociarla al usuario
+            organizacion = Organizacion(org_id=user, org_nombre=org_nombre, org_direccion=org_direccion, org_telefono=org_telefono)
+            organizacion.save()
+            
+            return redirect('home')
+        
+        except IntegrityError:
+            # Si hay un error (por ejemplo, nombre de usuario duplicado), muestra un mensaje de error.
+            return render(request, 'organizacionRegister.html', {'error_message': 'El nombre de usuario ya está en uso.'})
+    
+    return render(request, 'organizacionRegister.html')
+
+
+
+
+def no_organizacion(request):
+    return render(request,'no_organizacion.html')
+
 
 @login_required
 def manualLogout(request):
@@ -84,4 +123,3 @@ def userManagement(request):
     vehicles = Vehiculo.objects.filter(vhc_usuario_id=user)
 
     return render(request, 'userManagement.html', {'user': user, 'vehicles': vehicles})
-

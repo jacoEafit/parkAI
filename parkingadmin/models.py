@@ -8,6 +8,13 @@ class Organizacion(models.Model):
     org_direccion = models.CharField(max_length=255)
     org_telefono = models.CharField(max_length=20)
 
+    class Meta:
+        verbose_name = "Organización"
+        verbose_name_plural = "Organizaciones"
+
+    def __str__(self):
+        return f"{self.org_nombre} - {self.org_id.username}"
+
 
 
 

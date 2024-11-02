@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from parkingadmin.models import Vehiculo  # Importa el modelo Vehiculo
 import re  # Importa el módulo re para expresiones regulares
+from parkingadmin.models import Organizacion
 
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
