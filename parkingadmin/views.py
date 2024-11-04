@@ -28,26 +28,34 @@ def lectura_placa_vehiculo(request):
         fs = FileSystemStorage(location='media') #Especifíca ubicación
         nombre_imagen_vehiculo = fs.save(imagen_vehiculo.name, imagen_vehiculo) #Guarda imagen y almacena nombre archivo
         url_imagen_vehiculo = fs.url(nombre_imagen_vehiculo) #Obtiene la url del archivo para poder acceder a él
-
+        context = {'url_imagen_vehiculo':url_imagen_vehiculo}
 
         #Se extrae placa vehiculo con visión artificial:
         resultados_procesamiento = helpers.procesar_placa(ruta_imagen = 'media/'+nombre_imagen_vehiculo, nombre_imagen_vehiculo = imagen_vehiculo.name)
         
         #Se valida si se obtuvo la placa correctamente
-        if isinstance(resultados_procesamiento,tuple):#Si se detecto una placa
-            placa_vhc_ingreso,url_imagen_recorte_placa = resultados_procesamiento
-        else:
-            placa_vhc_ingreso = resultados_procesamiento
+        if resultados_procesamiento['se_detecto_una_placa'] == True and resultados_procesamiento['se_encontraron_textos'] == True: #Si se detecto una placa y texto en esa placa
+            placa_vhc_ingreso = resultados_procesamiento['texto_detectado']
+            url_imagen_recorte_placa = resultados_procesamiento['url_imagen_recorte_placa']
+            #Se valida si dicho vehículo existe:
+            try:
+                vehiculo = Vehiculo.objects.get(vhc_placa = placa_vhc_ingreso)
+                vehiculo_existe = True
+            except ObjectDoesNotExist:
+                vehiculo_existe = False
+            context['vehiculo_existe'] = vehiculo_existe
+            context['placa_vehiculo'] = placa_vhc_ingreso
+            context['url_imagen_recorte_placa'] = url_imagen_recorte_placa
 
-        #Se valida si dicho vehículo existe:
-        try:
-            vehiculo = Vehiculo.objects.get(vhc_placa = placa_vhc_ingreso)
-            vehiculo_existe = True
-        except ObjectDoesNotExist:
-            vehiculo_existe = False
+        elif resultados_procesamiento['se_detecto_una_placa'] == False and resultados_procesamiento['se_encontraron_textos'] == False: #Si no se detecta placa o más de una
+            context['error_prediccion'] = "Error, no se detectaron placas ó se detectó más de una"
+        
+        elif resultados_procesamiento['se_detecto_una_placa'] == True and resultados_procesamiento['se_encontraron_textos'] == False: #Si se detecta placa pero no texto
+            context['error_prediccion'] = "Error, no se detectó texto en la placa"
+
+        
 
         #Se renderiza nuevo template con respectivo contexto sobre nuevo ingreso
-        context = {"vehiculo_existe":vehiculo_existe,"url_imagen_vehiculo":url_imagen_vehiculo,"url_imagen_recorte_placa":url_imagen_recorte_placa,"placa_vehiculo":placa_vhc_ingreso}
         return render(request,'lectura_placa_vehiculo.html',context=context)
 
     #Si no han ingresado imagen

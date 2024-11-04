@@ -41,10 +41,10 @@ def recortar_placa(ruta_imagen):
         # Convierte la imagen de BGR a RGB
         imagen_recortada = cv2.cvtColor(imagen_recortada, cv2.COLOR_BGR2RGB)
 
-        return imagen_recortada
+        return {'imagen_recortada':imagen_recortada,'se_detecto_una_placa':True}
     
     else:
-        return ''
+        return {'se_detecto_una_placa':False}
 
 
 
@@ -73,8 +73,8 @@ def extraer_textos_placa(imagen_placa):
     resultados = reader.readtext(imagen_placa,detail=0)# Se leen textos de la placa
     print(resultados)
     if not resultados:# Si no se encuentran textos
-        return ['']
-    return resultados# Si se encuentran textos
+        return {'se_encontraron_textos':False}
+    return {'se_encontraron_textos':True,'textos':resultados}# Si se encuentran textos
 
 
 
@@ -116,20 +116,27 @@ def limpiar_textos(textos):
 """Función que llama a todas las anteriores funciones para devolver texto de placa"""
 def procesar_placa(ruta_imagen, nombre_imagen_vehiculo):
 
-    recorte_placa = recortar_placa(ruta_imagen)# Detectar y hacer recorte placa
-    if recorte_placa == '':#Si no se identifica placa ó si se identifican más
-        return ''
-    
-    url_imagen_recorte_placa = guardar_imagen_recortada(recorte_placa,nombre_imagen_vehiculo)# Guardar imagen recorte
+    resultados_recorte_placa = recortar_placa(ruta_imagen)# Detectar y hacer recorte placa
+    if resultados_recorte_placa['se_detecto_una_placa'] == False: #Si no se identifica placa ó si se identifican más
+        return {'se_detecto_una_placa':False,'se_encontraron_textos':False}
 
-    textos = extraer_textos_placa(recorte_placa)# Extraer textos
-    texto_limpio = limpiar_textos(textos = textos)# Limpiar símbolos de texto
+    elif resultados_recorte_placa['se_detecto_una_placa'] == True: #Si se identifica una placa
+        url_imagen_recorte_placa = guardar_imagen_recortada(resultados_recorte_placa['imagen_recortada'],nombre_imagen_vehiculo)# Guardar imagen recortada
 
-    #Se valida que placa si tenga estructura adecuada:
-    if len(texto_limpio) == 6:
-        primeros_tres = texto_limpio[0:3]
-        siguientes_tres = texto_limpio[3:6]
-        if not primeros_tres.isalpha() or not siguientes_tres.isdigit():
-            texto_limpio = ''
+        resultados_ocr = extraer_textos_placa(resultados_recorte_placa['imagen_recortada'])# Extraer textos
 
-    return texto_limpio.upper(), url_imagen_recorte_placa
+        if resultados_ocr['se_encontraron_textos'] == False: #Si no se encuentran textos
+            return {'se_detecto_una_placa':True,'se_encontraron_textos':False}
+        
+        elif resultados_ocr['se_encontraron_textos'] == True: #Si se encuentran textos en placa
+            texto_limpio = limpiar_textos(textos = resultados_ocr['textos'])# Limpiar símbolos de texto
+
+            #Se valida que placa si tenga estructura adecuada:
+            if len(texto_limpio) == 6:
+                primeros_tres = texto_limpio[0:3]
+                siguientes_tres = texto_limpio[3:6]
+                if not primeros_tres.isalpha() or not siguientes_tres.isdigit():
+                    texto_limpio = ''
+
+            texto_limpio = texto_limpio.upper()
+            return {'texto_detectado':texto_limpio,'url_imagen_recorte_placa':url_imagen_recorte_placa,'se_detecto_una_placa':True,'se_encontraron_textos':True}

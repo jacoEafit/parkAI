@@ -40,25 +40,31 @@
 
                         <!-- Estado del vehículo y acciones -->
                         <div>
-                            {% if vehiculo_existe %}
-                                <div class="alert alert-info text-center">
-                                    <strong>¡Vehículo encontrado!</strong> Ya está registrado.
-                                </div>
-                                <div class="d-flex justify-content-center mt-3">
-                                    <a href="{% url 'ingreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-success me-2">Registrar Ingreso</a>
-                                    <a href="{% url 'egreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-danger">Registrar Salida</a>
-                                </div>
-                            {% elif vehiculo_existe == False %}
-                                <div class="alert alert-warning text-center">
-                                    <strong>Vehículo no encontrado.</strong> ¿Deseas registrarlo? <a href="{% url 'addVehicle' %}" class="alert-link">Haz clic aquí.</a>
-                                </div>
+                            {% if error_prediccion %}
+                            <div class="alert alert-danger text-center">
+                                <strong>{{ error_prediccion }}</strong>
+                            </div>
+                            {% else %}
+                                {% if vehiculo_existe %}
+                                    <div class="alert alert-info text-center">
+                                        <strong>¡Vehículo encontrado!</strong> Ya está registrado.
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <a href="{% url 'ingreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-success me-2">Registrar Ingreso</a>
+                                        <a href="{% url 'egreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-danger">Registrar Salida</a>
+                                    </div>
+                                {% elif vehiculo_existe == False  %}
+                                    <div class="alert alert-warning text-center">
+                                        <strong>Vehículo no encontrado.</strong> ¿Deseas registrarlo? <a href="{% url 'addVehicle' %}" class="alert-link">Haz clic aquí.</a>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 {% elif url_imagen_vehiculo and not placa_vehiculo %}
                     <div class="alert alert-danger text-center">
-                        <strong>No se detectó ninguna placa en la imagen cargada.</strong>
+                        <strong>{{ error_prediccion }}</strong>
                     </div>
                 {% endif %}
             </form>
