@@ -7,15 +7,20 @@
         <!-- Información del parqueadero -->
         <div class="col-12 col-md-8 mb-4">
             <div class="card text-center bg-black text-white rounded position-relative">
-                <div class="card-body">
-                    <h1 class="card-title">{{ parqueadero.prq_nombre }}</h1>
-                    <!-- Ícono de información modal -->
+                <div class="card-body d-flex align-items-center justify-content-center position-relative">
+                    <!-- Ícono de señal de tránsito para flujo vehicular -->
+                    <a href="{% url 'lectura_placa_vehiculo' parqueadero.prq_id %}" class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%); background-color: white; padding: 10px; border-radius: 50%;" title="Flujo Vehicular">
+                        <i class="fa fa-exchange-alt fa-lg text-dark"></i>
+                    </a>
+                    <h1 class="card-title m-0">{{ parqueadero.prq_nombre }}</h1>
+                    <!-- Ícono de información modal en la esquina superior derecha -->
                     <a href="#" data-bs-toggle="modal" data-bs-target="#infoModal" class="position-absolute" style="top: 10px; right: 10px;">
                         <i class="fa fa-info-circle fa-2x text-white"></i>
                     </a>
                 </div>
             </div>
         </div>
+
 
         <!-- Modal de información -->
         <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">

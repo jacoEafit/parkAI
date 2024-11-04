@@ -5,6 +5,7 @@
 <div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
     <div class="card w-75" style="background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="card-body p-4">
+            <h1>{{ parqueadero.prq_nombre }}</h1>
             <h3 class="text-center mb-4 text-dark">Flujo de vehículos</h3>
 
             <!-- Formulario de carga de imagen y resultados dinámicos -->
@@ -50,8 +51,8 @@
                                         <strong>¡Vehículo encontrado!</strong> Ya está registrado.
                                     </div>
                                     <div class="d-flex justify-content-center mt-3">
-                                        <a href="{% url 'ingreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-success me-2">Registrar Ingreso</a>
-                                        <a href="{% url 'egreso_vehiculo' %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-danger">Registrar Salida</a>
+                                        <a href="{% url 'ingreso_vehiculo' parqueadero.prq_id %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-success me-2">Registrar Ingreso</a>
+                                        <a href="{% url 'egreso_vehiculo' parqueadero.prq_id %}?url_imagen_vehiculo={{ url_imagen_vehiculo }}&placa={{ placa_vehiculo }}" class="btn btn-outline-danger">Registrar Salida</a>
                                     </div>
                                 {% elif vehiculo_existe == False  %}
                                     <div class="alert alert-warning text-center">

@@ -18,7 +18,11 @@ def sobreNosotros(request):
     return render(request, 'sobreNosotros.html')
 
 @organizacion_required
-def lectura_placa_vehiculo(request):
+def lectura_placa_vehiculo(request,parqueadero_id):
+    #Se obtiene info parqueadero
+    parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
+    context = {'parqueadero':parqueadero}
+
     #Si ingresan una imagen 
     if request.method == 'POST' and request.FILES['image']:
         #Se obtiene imagen vehiculo desde templates:
@@ -28,7 +32,7 @@ def lectura_placa_vehiculo(request):
         fs = FileSystemStorage(location='media') #Especifíca ubicación
         nombre_imagen_vehiculo = fs.save(imagen_vehiculo.name, imagen_vehiculo) #Guarda imagen y almacena nombre archivo
         url_imagen_vehiculo = fs.url(nombre_imagen_vehiculo) #Obtiene la url del archivo para poder acceder a él
-        context = {'url_imagen_vehiculo':url_imagen_vehiculo}
+        context['url_imagen_vehiculo'] = url_imagen_vehiculo
 
         #Se extrae placa vehiculo con visión artificial:
         resultados_procesamiento = helpers.procesar_placa(ruta_imagen = 'media/'+nombre_imagen_vehiculo, nombre_imagen_vehiculo = imagen_vehiculo.name)
@@ -60,18 +64,17 @@ def lectura_placa_vehiculo(request):
 
     #Si no han ingresado imagen
     elif request.method == 'GET':
-        return render(request,'lectura_placa_vehiculo.html')
+        return render(request,'lectura_placa_vehiculo.html',context=context)
 
 
 
 
 "Vista que registra el ingreso del vehículo"
 @organizacion_required
-def ingreso_vehiculo(request):
+def ingreso_vehiculo(request,parqueadero_id):
 
     #Se obtiene información del ingreso
-    organizacion = Organizacion.objects.get(org_id = request.user)
-    parqueadero = Parqueadero.objects.get(prq_organizacion_id = organizacion)
+    parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
     nombre_parqueadero = parqueadero.prq_nombre
     ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
     placa = request.GET.get('placa')
@@ -96,11 +99,10 @@ def ingreso_vehiculo(request):
 
 "Vista que registra el egreso del vehículo y genera cobro"
 @organizacion_required
-def egreso_vehiculo(request):
+def egreso_vehiculo(request,parqueadero_id):
     
     #Se obtiene información de egreso
-    organizacion = Organizacion.objects.get(org_id = request.user)
-    parqueadero = Parqueadero.objects.get(prq_organizacion_id = organizacion)
+    parqueadero = Parqueadero.objects.get(prq_id = parqueadero_id)
     nombre_parqueadero = parqueadero.prq_nombre
     ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
     placa = request.GET.get('placa')
