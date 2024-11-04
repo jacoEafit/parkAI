@@ -1,24 +1,44 @@
-<div class="container mt-5">
-    <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">¡Ingreso creado con éxito!</h4>
-        <p>Se ha registrado el ingreso del vehículo con la siguiente información:</p>
-    </div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    
+    <!-- FontAwesome (opcional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <div class="card mb-3">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="{{ ingreso.ing_imagen_vehiculo.url }}" class="img-fluid rounded-start" alt="Imagen del Vehículo">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Información del Ingreso</h5>
-                    <p class="card-text"><strong>ID de Ingreso:</strong> {{ ingreso.ing_id }}</p>
-                    <p class="card-text"><strong>Placa del Vehículo:</strong> {{ ingreso.ing_placa_vehiculo }}</p>
-                    <p class="card-text"><strong>Fecha y Hora:</strong> {{ ingreso.ing_fecha_hora }}</p>
-                </div>
+</head>
+
+<body style="position: relative; min-height: 100vh;">
+    <div class="container mt-5">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">¡Ingreso creado con éxito!</h4>
+            <p>Se ha registrado el ingreso del vehículo con la siguiente información:</p>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Información del Ingreso</h5>
+                <p class="card-text"><strong>Parqueadero:</strong> {{ nombre_parqueadero }}</p>
+                <p class="card-text"><strong>ID de Ingreso:</strong> {{ ingreso.ing_id }}</p>
+                <p class="card-text"><strong>Placa del Vehículo:</strong> {{ ingreso.ing_placa_vehiculo }}</p>
+                <p class="card-text"><strong>Fecha y Hora:</strong> {{ ingreso.ing_fecha_hora }}</p>
             </div>
         </div>
-    </div>
 
-    <a href="#" class="btn btn-primary">Volver a la página principal</a>
-</div>
+        <!-- Botón estilizado para volver a la página principal -->
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'home' %}" class="btn btn-primary mt-3">Volver a la página principal</a>
+        </div>
+    </div>
+    
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

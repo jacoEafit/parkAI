@@ -44,11 +44,6 @@
             <div class="col-12 col-md-8 mb-4">
                 <div class="card p-3 position-relative bg-white border-secondary shadow-lg">
                     <!-- Acciones de Zona -->
-                    <div class="position-absolute" style="top: 3px; right: 40px;">
-                        <a href="#" title="Editar Zona">
-                            <i class="fa fa-pencil-alt fa-x text-black"></i>
-                        </a>
-                    </div>
                     <div class="position-absolute" style="top: 3px; right: 10px;">
                         <a href="{% url 'eliminar_zona' zona_data.info_zona.zna_id %}" title="Eliminar Zona">
                             <i class="fa fa-trash fa-x text-danger"></i>
@@ -56,7 +51,7 @@
                     </div>
 
                     <!-- Nombre de la Zona -->
-                    <div class="bg-danger text-white text-center p-2 rounded shadow-sm" style="margin-top: 13px;">
+                    <div class="text-black text-center p-2 rounded shadow-sm" style="margin-top: 13px; background-color: #d1fae5;">
                         <h2 class="text-uppercase m-0">{{ zona_data.info_zona.zna_nombre_zona }}</h2>
                     </div>
 

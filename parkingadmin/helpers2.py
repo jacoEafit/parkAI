@@ -131,7 +131,9 @@ def ejecucion_helpers2(ruta_imagen, nombre_imagen_conjunto_celdas, conjunto_celd
         arreglo_predicciones = organizar_predicciones(arreglo_predicciones)
         return {'arreglo_predicciones':arreglo_predicciones,'cambiar_celdas':True,'nombre_imagen_con_bnd_boxes':nombre_imagen_con_bnd_boxes}
     
-    else: return {'cambiar_celdas':False,'nombre_imagen_con_bnd_boxes':nombre_imagen_con_bnd_boxes}
+    else: 
+        arreglo_predicciones = organizar_predicciones(arreglo_predicciones)
+        return {'cambiar_celdas':False,'nombre_imagen_con_bnd_boxes':nombre_imagen_con_bnd_boxes,'arreglo_predicciones':arreglo_predicciones}
 
 
 

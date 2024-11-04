@@ -117,7 +117,7 @@ def limpiar_textos(textos):
 def procesar_placa(ruta_imagen, nombre_imagen_vehiculo):
 
     recorte_placa = recortar_placa(ruta_imagen)# Detectar y hacer recorte placa
-    if recorte_placa.any() == '':#Si no se identifica placa ó si se identifican más
+    if recorte_placa == '':#Si no se identifica placa ó si se identifican más
         return ''
     
     url_imagen_recorte_placa = guardar_imagen_recortada(recorte_placa,nombre_imagen_vehiculo)# Guardar imagen recorte

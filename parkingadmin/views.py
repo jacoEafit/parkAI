@@ -45,10 +45,6 @@ def lectura_placa_vehiculo(request):
             vehiculo_existe = True
         except ObjectDoesNotExist:
             vehiculo_existe = False
-        
-        #Se crea el ingreso:
-        #ingreso = Ingreso(ing_vehiculo_id = vehiculo.vhc_id, ing_placa_vehiculo = vehiculo.vhc_placa, ing_fecha_hora=timezone.now(), ing_imagen_vehiculo = 'imagenes_vehiculos/'+nombre_imagen_vehiculo)
-        #ingreso.save()
 
         #Se renderiza nuevo template con respectivo contexto sobre nuevo ingreso
         context = {"vehiculo_existe":vehiculo_existe,"url_imagen_vehiculo":url_imagen_vehiculo,"url_imagen_recorte_placa":url_imagen_recorte_placa,"placa_vehiculo":placa_vhc_ingreso}
@@ -64,6 +60,11 @@ def lectura_placa_vehiculo(request):
 "Vista que registra el ingreso del vehículo"
 @organizacion_required
 def ingreso_vehiculo(request):
+
+    #Se obtiene información del ingreso
+    organizacion = Organizacion.objects.get(org_id = request.user)
+    parqueadero = Parqueadero.objects.get(prq_organizacion_id = organizacion)
+    nombre_parqueadero = parqueadero.prq_nombre
     ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
     placa = request.GET.get('placa')
 
@@ -75,9 +76,9 @@ def ingreso_vehiculo(request):
         except ObjectDoesNotExist:
             return HttpResponse("Error: Esa placa no se encuentra registrada", status=400)
 
-        nuevo_ingreso = Ingreso(ing_vehiculo_id = vehiculo, ing_placa_vehiculo=placa, ing_fecha_hora=timezone.now(), ing_imagen_vehiculo=ruta_imagen_vehiculo)
+        nuevo_ingreso = Ingreso(ing_vehiculo_id = vehiculo, ing_placa_vehiculo=placa, ing_parqueadero_id = parqueadero,ing_fecha_hora=timezone.now(), ing_imagen_vehiculo=ruta_imagen_vehiculo)
         nuevo_ingreso.save()
-        context = {'ingreso':nuevo_ingreso}
+        context = {'ingreso':nuevo_ingreso,'nombre_parqueadero':nombre_parqueadero}
         return render(request,'ingreso_succes.html',context=context)
 
     else: return HttpResponse("Error: No se obtuvieron correctamente los parámetros", status=400)
@@ -88,6 +89,11 @@ def ingreso_vehiculo(request):
 "Vista que registra el egreso del vehículo y genera cobro"
 @organizacion_required
 def egreso_vehiculo(request):
+    
+    #Se obtiene información de egreso
+    organizacion = Organizacion.objects.get(org_id = request.user)
+    parqueadero = Parqueadero.objects.get(prq_organizacion_id = organizacion)
+    nombre_parqueadero = parqueadero.prq_nombre
     ruta_imagen_vehiculo = request.GET.get('url_imagen_vehiculo')
     placa = request.GET.get('placa')
 
@@ -99,9 +105,9 @@ def egreso_vehiculo(request):
         except ObjectDoesNotExist:
             return HttpResponse("Error: Esa placa no se encuentra registrada", status=400)
 
-        nuevo_egreso = Egreso(egr_vehiculo_id = vehiculo, egr_placa_vehiculo=placa, egr_fecha_hora=timezone.now(), egr_imagen_vehiculo=ruta_imagen_vehiculo)
+        nuevo_egreso = Egreso(egr_vehiculo_id = vehiculo, egr_placa_vehiculo=placa, egr_parqueadero_id = parqueadero, egr_fecha_hora=timezone.now(), egr_imagen_vehiculo=ruta_imagen_vehiculo)
         nuevo_egreso.save()
-        context = {'egreso':nuevo_egreso}
+        context = {'egreso':nuevo_egreso,'nombre_parqueadero':nombre_parqueadero}
         return render(request,'egreso_succes.html',context=context)
 
     else: return HttpResponse("Error: No se obtuvieron correctamente los parámetros", status=400)

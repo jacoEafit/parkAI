@@ -75,6 +75,7 @@ class Vehiculo(models.Model):
 class Ingreso(models.Model):
     ing_id = models.AutoField(primary_key=True)
     ing_vehiculo_id = models.ForeignKey(Vehiculo, on_delete=models.CASCADE,default=None)
+    ing_parqueadero_id = models.ForeignKey(Parqueadero, on_delete=models.CASCADE, null=True)
     ing_placa_vehiculo = models.CharField(max_length=15)
     ing_fecha_hora = models.DateTimeField()
     ing_imagen_vehiculo = models.ImageField(upload_to='imagenes_vehiculos/', default=None)
@@ -85,6 +86,7 @@ class Ingreso(models.Model):
 class Egreso(models.Model):
     egr_id = models.AutoField(primary_key=True)
     egr_vehiculo_id = models.ForeignKey(Vehiculo, on_delete=models.CASCADE,default=None)
+    egr_parqueadero_id = models.ForeignKey(Parqueadero, on_delete=models.CASCADE, null=True)
     egr_placa_vehiculo = models.CharField(max_length=15)
     egr_fecha_hora = models.DateTimeField()
     egr_imagen_vehiculo = models.ImageField(upload_to='imagenes_vehiculos/', default=None)
@@ -94,6 +96,7 @@ class Egreso(models.Model):
 class Factura(models.Model):
     fac_id = models.AutoField(primary_key=True)
     fac_vehiculo_id = models.ForeignKey(Vehiculo, on_delete=models.CASCADE)
+    fac_parqueadero_id = models.ForeignKey(Parqueadero, on_delete=models.CASCADE, null=True)
     fac_placa_vehiculo = models.CharField(max_length=15)
     fac_ingreso_id = models.ForeignKey(Ingreso, on_delete=models.CASCADE, default=None)
     fac_egreso_id = models.ForeignKey(Egreso, on_delete=models.CASCADE,default=None)
