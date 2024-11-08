@@ -1,0 +1,32 @@
+{% extends 'baseParking.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-start mt-5" style="min-height: 80vh;">
+        <div class="card shadow-lg p-4" style="width: 100%; max-width: 600px;">
+            <h1 class="card-title text-center mb-4">Parqueadero: {{ parqueadero.prq_nombre }}</h1>
+
+            <h3 class="mt-4">Zonas y Celdas Disponibles</h3>
+            
+            {% if zonas_info %}
+                {% for zona in zonas_info %}
+                    <div class="mb-3">
+                        <strong>{{ zona.zona_nombre }}</strong>: 
+                        <span class="badge bg-success ">{{ zona.celdas_vacias|length }} celdas vacías</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay zonas con celdas vacías en este parqueadero.</p>
+            {% endif %}
+            
+            {% if celda_aleatoria %}
+                <div class="mt-4">
+                    <h3>Te hemos guiado a la siguiente celda:</h3>
+                    <p><strong>{{ celda_aleatoria.cld_nombre_celda }}</strong> en la zona <strong>{{ celda_aleatoria.cld_conjunto_celdas_id.cnj_zona_id.zna_nombre_zona }}</strong>.</p>
+                </div>
+            {% else %}
+                <p>No hay celdas vacías disponibles para guiarte.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

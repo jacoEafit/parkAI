@@ -1,0 +1,24 @@
+{% extends 'baseParking.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container d-flex justify-content-center align-items-start mt-5" style="min-height: 80vh;">
+        <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
+            <h1 class="card-title text-center mb-4">Seleccione un Parqueadero</h1>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="parqueadero" class="form-label">Parqueadero:</label>
+                    <select id="parqueadero" name="parqueadero" class="form-select">
+                        {% for parqueadero in parqueaderos %}
+                            <option value="{{ parqueadero.prq_id }}">{{ parqueadero.prq_nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success w-100 custom-bg2 text-black fw-bold">Seleccionar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

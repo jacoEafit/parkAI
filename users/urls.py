@@ -11,4 +11,5 @@ urlpatterns = [
     path('userManagement/', views.userManagement, name='userManagement'),
     path('organizacionRegister', views.organizacionRegister, name='organizacionRegister'),
     path('no_organizacion', views.no_organizacion, name='no_organizacion'),
+    path('conOrganizacion', views.conOrganizacion, name='conOrganizacion'),
 ]

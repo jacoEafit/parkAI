@@ -1,4 +1,4 @@
-{% extends 'base_home.html' %}
+{% extends 'baseParking.html' %}
 {% load static %}
 
 {% block content %}
@@ -23,10 +23,10 @@
             <label for="vhc_placa" class="form-label">Placa del vehículo</label>
             <input type="text" class="form-control form-control-sm w-100" id="vhc_placa" name="vhc_placa" pattern="[a-zA-Z0-9-]+" title="Solo letras, números y guiones, sin espacios" required>
           </div>
-          <button type="submit" class="btn btn-danger btn-sm w-100 mt-2">Eliminar Vehículo</button>
+          <button type="submit" class="btn btn-danger btn-sm w-100 mt-2 custom-bg3 text-black fw-bold">Eliminar Vehículo</button>
         </form>
         <div class="mt-2 text-center">
-          <p>Volver a <a href="{% url 'userManagement' %}">manejo de vehículos</a></p>
+          <p>Volver a <a href="{% url 'userManagement' %}" class="text-black fw-bold">manejo de vehículos</a></p>
         </div>
       </div>
     </div>

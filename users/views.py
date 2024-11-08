@@ -64,12 +64,11 @@ def organizacionRegister(request):
     
     return render(request, 'organizacionRegister.html')
 
-
-
-
 def no_organizacion(request):
     return render(request,'no_organizacion.html')
 
+def conOrganizacion(request):
+    return render(request,'conOrganizacion.html')
 
 @login_required
 def manualLogout(request):

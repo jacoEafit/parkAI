@@ -1,27 +1,38 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+<style>
+    .custom-bg {
+        background-color: #98d3d8; 
+    }
+</style>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-bg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">
-        <img src="{% static 'logo_letras1.png' %}" alt="Admin" style="height: 30px;">
+      <a class="navbar-brand" href="{% url 'homeUsers' %}">
+        <img src="{% static 'logoAlt.png' %}" alt="Admin" style="height: 30px;">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'parking_management' %}">Parqueaderos</a>
+          <li class="nav-item mx-2">
+            <a class="nav-link active text-black fw-bold" aria-current="page" href="{% url 'guiarUsuario' %}">Entrada</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'sobre_nosotros' %}">Sobre nosotros</a>
+          <li class="nav-item mx-2">
+            <a class="nav-link active text-black fw-bold" aria-current="page" href="{% url 'sobreNosotrosUsers' %}">Sobre nosotros</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'homeUsers' %}">parkAI para usuarios</a>
+          <li class="nav-item mx-2">
+            <a class="nav-link active text-black fw-bold" aria-current="page" href="{% url 'userManagement' %}">Manejo de vehiculos</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link active text-black fw-bold" aria-current="page" href="{% url 'home' %}">parkAI para organizaciones</a>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-user fa-lg"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
