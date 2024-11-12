@@ -2,5 +2,50 @@
 {% load static %}
 
 {% block content %}
-<h2>holi</h2>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">¡Encuentra tu espacio de parqueo ideal!</h1>
+        <p class="lead">Facilitamos la búsqueda de espacios libres en parqueaderos y la gestión de tus vehículos de manera eficiente.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-car" style="font-size: 3rem; color: #007bff;"></i>
+                    </div>
+                    <h5 class="card-title">Gestión de Vehículos</h5>
+                    <p class="card-text">Registra y administra tus vehículos con facilidad desde nuestra plataforma.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-map-marker-alt" style="font-size: 3rem; color: #28a745;"></i>
+                    </div>
+                    <h5 class="card-title">Búsqueda de Parqueos</h5>
+                    <p class="card-text">Encuentra los mejores espacios libres en parqueaderos cerca de ti.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fa fa-clipboard-check" style="font-size: 3rem; color: #ffc107;"></i>
+                    </div>
+                    <h5 class="card-title">Reserva Fácil</h5>
+                    <p class="card-text">Reserva tu espacio con anticipación y ahorra tiempo en tu día a día.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <a href="{% url 'guiarUsuario' %}" class="btn custom-bg2 text-black fw-bold">Comenzar Ahora</a>
+    </div>
+</div>
 {% endblock %}

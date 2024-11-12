@@ -5,9 +5,7 @@
 <div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
     <div class="card w-75" style="background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <div class="card-body p-4">
-            <h1>{{ parqueadero.prq_nombre }}</h1>
-            <h3 class="text-center mb-4 text-dark">Flujo de vehículos</h3>
-
+            <h1 class="text-center text-primary">{{ parqueadero.prq_nombre }}</h1>
             <!-- Formulario de carga de imagen y resultados dinámicos -->
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -56,7 +54,7 @@
                                     </div>
                                 {% elif vehiculo_existe == False  %}
                                     <div class="alert alert-warning text-center">
-                                        <strong>Vehículo no encontrado.</strong> ¿Deseas registrarlo? <a href="{% url 'addVehicle' %}" class="alert-link">Haz clic aquí.</a>
+                                        <strong>Vehículo no encontrado.</strong> Regístralo para continuar
                                     </div>
                                 {% endif %}
                             {% endif %}

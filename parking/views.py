@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from parkingadmin.models import Parqueadero, Zona, Celda
 import random
+from parkingadmin.decorators import sin_organizacion_required
 
 # Create your views here.
 
 def homeUsers(request):
     return render(request, 'homeUsers.html')
 
+
+@sin_organizacion_required
 def guiarUsuario(request):
         # Obtener todos los parqueaderos
     parqueaderos = Parqueadero.objects.all()

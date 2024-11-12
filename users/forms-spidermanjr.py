@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from parkingadmin.models import Vehiculo  # Importa el modelo Vehiculo
 import re  # Importa el módulo re para expresiones regulares
+from parkingadmin.models import Organizacion
 
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
@@ -40,10 +41,22 @@ class VehiculoForm(forms.ModelForm):
             raise forms.ValidationError("El campo 'Placa' no puede estar vacío.")
         
         # Convertir a minúsculas
-        vhc_placa = vhc_placa.lower()
+        vhc_placa = vhc_placa.upper()
         
         # Validar que no contenga espacios y solo letras y números
-        if not re.match(r'^[a-zA-Z0-9]+$', vhc_placa):
+        if not re.match(r'^[A-Z0-9]+$', vhc_placa):  # Cambiar a mayúsculas en la expresión regular
             raise forms.ValidationError("La placa solo puede contener letras y números, sin espacios.")
         
+        
         return vhc_placa
+
+class DeleteVehicleForm(forms.Form):
+    vhc_placa = forms.CharField(
+        label='Placa del vehículo',
+        max_length=10,  # Ajusta según el formato de la placa
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese la placa del vehículo',
+            'pattern': '[A-Z0-9-]+',  # Modifica según tus necesidades
+        })
+    )
