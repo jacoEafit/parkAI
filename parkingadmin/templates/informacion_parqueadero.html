@@ -2,21 +2,125 @@
 {% load static %}
 
 {% block content %}
-    <h1>{{ parqueadero.prq_nombre }}</h1>
+<div class="container-fluid">
+    <div class="row justify-content-center mt-4">
+        <!-- Información del parqueadero -->
+        <div class="col-12 col-md-8 mb-4">
+            <div class="card text-center bg-black text-white rounded position-relative">
+                <div class="card-body d-flex align-items-center justify-content-center position-relative">
+                    <!-- Ícono de señal de tránsito para flujo vehicular -->
+                    <a href="{% url 'lectura_placa_vehiculo' parqueadero.prq_id %}" class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%); background-color: white; padding: 10px; border-radius: 50%;" title="Flujo Vehicular">
+                        <i class="fa fa-exchange-alt fa-lg text-dark"></i>
+                    </a>
+                    <h1 class="card-title m-0">{{ parqueadero.prq_nombre }}</h1>
+                    <!-- Ícono de información modal en la esquina superior derecha -->
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#infoModal" class="position-absolute" style="top: 10px; right: 10px;">
+                        <i class="fa fa-info-circle fa-2x text-white"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    {% for zona_data in info_zonas %} <!-- For iterar zonas -->
 
-        <h2>{{ zona_data.info_zona.zna_nombre_zona }}</h2> 
-        
-        {% for conjunto_data in zona_data.conjunto_celdas %} <!-- For iterar conjuntos -->
-            <h3>{{ conjunto_data.info_conjunto.cnj_nombre_conjunto }}</h3>
-            
-            <ul>
-                {% for celda_data in conjunto_data.celdas %} <!-- For iterar celdas -->
-                    <li>{{ celda_data.info_celda.cld_nombre_celda }}</li>
-                {% endfor %} <!-- Fin for iterar celdas -->
-            </ul>
-        {% endfor %} <!-- Fin for iterar conjuntos -->
-        <a href="{% url 'crear_conjunto_celdas' zona_id=info_zona.zna_id %}">crear conjunto de celdas</a>
-    {% endfor %} <!-- Fin for iterar zonas -->
+        <!-- Modal de información -->
+        <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white p-3" style="border-radius: 10px;">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="infoModalLabel">Jerarquía de un parqueadero</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Zona:</strong> Diferentes partes de un parqueadero.</p>
+                        <p><strong>Subzona:</strong> Conjunto de celdas en una zona, cada subzona tiene una cámara.</p>
+                        <p><strong>Celda:</strong> Espacio para parquear vehículos, cada una tiene un estado.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-parking text-success"></i> <strong class="text-success">Desocupado</strong> - Espacio disponible</li>
+                            <li><i class="fa fa-parking text-danger"></i> <strong class="text-danger">Ocupado</strong> - Espacio en uso</li>
+                            <li><i class="fa fa-parking text-primary"></i> <strong class="text-primary">No disponible</strong> - Espacio no habilitado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Zonas -->
+        {% for zona_data in info_zonas %}
+            <div class="col-12 col-md-8 mb-4">
+                <div class="card p-3 position-relative bg-white border-secondary shadow-lg">
+                    <!-- Acciones de Zona -->
+                    <div class="position-absolute" style="top: 3px; right: 10px;">
+                        <a href="{% url 'eliminar_zona' zona_data.info_zona.zna_id %}" title="Eliminar Zona">
+                            <i class="fa fa-trash fa-x text-danger"></i>
+                        </a>
+                    </div>
+
+                    <!-- Nombre de la Zona -->
+                    <div class="text-black text-center p-2 rounded shadow-sm" style="margin-top: 13px; background-color: #d1fae5;">
+                        <h2 class="text-uppercase m-0">{{ zona_data.info_zona.zna_nombre_zona }}</h2>
+                    </div>
+
+                    <!-- Subzonas -->
+                    {% for conjunto_data in zona_data.conjunto_celdas %}
+                    <div class="mt-3 p-3 border rounded bg-light shadow-sm d-flex align-items-center justify-content-between">
+                        <!-- Ícono y Nombre de Subzona -->
+                        <div class="d-flex align-items-center">
+                            <h3 class="m-0 ms-3 text-dark">
+                                <strong>Subzona:</strong> {{ conjunto_data.info_conjunto.cnj_nombre_conjunto }}
+                            </h3>
+                        </div>
+                        <!-- Acciones -->
+                        <div>
+                            <a href="{% url 'eliminar_conjunto_celdas' conjunto_data.info_conjunto.cnj_id %}" class="text-danger me-2" title="Eliminar Subzona">
+                                <i class="fa fa-trash fa-lg"></i>
+                            </a>
+                            <a href="{% url 'validar_disponibilidad_celdas' conjunto_data.info_conjunto.cnj_id %}" class="text-primary" title="Ingresar imagen subzona">
+                                <i class="fa fa-camera fa-lg" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Celdas de la Subzona -->
+                    <div class="d-flex flex-wrap mt-2" style="gap: 5px;">
+                        {% for celda_data in conjunto_data.celdas %}
+                            <div style="padding: 0; margin: 0;">
+                                <div class="d-flex align-items-center justify-content-center border bg-light" style="height: 40px; width: 60px;">
+                                    <span class="text-center">{{ celda_data.info_celda.cld_nombre_celda }}</span>
+                                    {% if celda_data.info_celda.cld_estado == "occupied" %}
+                                        <i class="fa fa-parking fa-2x text-danger" aria-hidden="true"></i>
+                                    {% elif celda_data.info_celda.cld_estado == "empty" %}
+                                        <i class="fa fa-parking fa-2x text-success" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i class="fa fa-parking fa-2x text-primary" aria-hidden="true"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr class="my-3">
+                    {% endfor %}
+
+                    <!-- Añadir nueva subzona -->
+                    <div class="text-center my-3">
+                        <a href="{% url 'crear_conjunto_celdas' zona_data.info_zona.zna_id %}" class="btn btn-success">
+                            <i class="fa fa-plus-circle fa-lg"></i> Añadir Subzona
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- Crear nueva zona -->
+        <div class="col-12 col-md-8 mt-4">
+            <div class="card text-center p-4 shadow-sm" style="border-radius: 1rem; background-color: #d4edda; border: 3px dashed #ccc;">
+                <h3 class="mb-3">Crear Nueva Zona</h3>
+                <p class="mb-3">Haz clic para agregar una nueva zona.</p>
+                <a href="{% url 'crear_zona' parqueadero.prq_id %}" class="btn btn-success">
+                    <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

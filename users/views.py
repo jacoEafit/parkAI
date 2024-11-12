@@ -1,8 +1,13 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, VehiculoForm
+from .forms import RegisterForm, VehiculoForm, DeleteVehicleForm
+from parkingadmin.models import Vehiculo  
+from django.shortcuts import get_object_or_404, redirect, render
+from parkingadmin.models import Organizacion
+from django.db import IntegrityError
+from django.contrib.auth.models import User
+from parkingadmin.decorators import sin_organizacion_required
 
 def login_view(request):
     if request.method == 'POST':
@@ -14,7 +19,7 @@ def login_view(request):
             return redirect('home')  
         else:
             messages.error(request, 'Nombre de usuario o contraseña incorrectos')  
-    return render(request, 'login.html')  #
+    return render(request, 'login.html')  
 
 def register(request):
     if request.method == 'POST':
@@ -31,21 +36,57 @@ def register(request):
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
-@login_required
-def userManagement(request):
-    return render(request, 'userManagement.html')
+
+def organizacionRegister(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        
+        org_nombre = request.POST['org_nombre']
+        org_direccion = request.POST['org_direccion']
+        org_telefono = request.POST['org_telefono']
+        
+        try:
+            # Crear el usuario
+            user = User.objects.create_user(username=username, password=password, email=email)
+            user.save()
+            login(request, user)
+            
+            # Crear la organización y asociarla al usuario
+            organizacion = Organizacion(org_id=user, org_nombre=org_nombre, org_direccion=org_direccion, org_telefono=org_telefono)
+            organizacion.save()
+            
+            return redirect('home')
+        
+        except IntegrityError:
+            # Si hay un error (por ejemplo, nombre de usuario duplicado), muestra un mensaje de error.
+            return render(request, 'organizacionRegister.html', {'error_message': 'El nombre de usuario ya está en uso.'})
+    
+    return render(request, 'organizacionRegister.html')
+
+def no_organizacion(request):
+    return render(request,'no_organizacion.html')
+
+def conOrganizacion(request):
+    return render(request,'conOrganizacion.html')
 
 @login_required
-def vehicleManagement(request):
+def manualLogout(request):
+    logout(request)  # Cierra la sesión del usuario
+    return redirect('home')  # Redirige a la página principal o a cualquier otra página que desees
+
+@sin_organizacion_required
+def addVehicle(request):
     if request.method == 'POST':
         form = VehiculoForm(request.POST)
         if form.is_valid():
             vehiculo = form.save(commit=False)
             vehiculo.vhc_usuario_id = request.user  # Asignar el usuario logueado
             vehiculo.save()
-            messages.success(request, 'Vehículo agregado con éxito.')  # Mensaje de éxito
+            return redirect('userManagement')
         else:
-            # Si el formulario no es válido, puedes agregar mensajes de error
+
             for field in form:
                 for error in field.errors:
                     messages.error(request, f'Error en {field.label}: {error}')
@@ -53,5 +94,32 @@ def vehicleManagement(request):
     else:
         form = VehiculoForm()
 
-    return render(request, 'vehicleManagement.html', {'form': form})
+    return render(request, 'addVehicle.html', {'form': form})
 
+@sin_organizacion_required
+def deleteVehicle(request):
+    if request.method == 'POST':
+        form = DeleteVehicleForm(request.POST)
+        if form.is_valid():
+            vhc_placa = form.cleaned_data['vhc_placa'].upper() 
+            try:
+                vehiculo = Vehiculo.objects.get(vhc_placa=vhc_placa, vhc_usuario_id=request.user)
+                vehiculo.delete()
+                return redirect('userManagement')  
+            except Vehiculo.DoesNotExist:
+                messages.error(request, 'No se encontró un vehículo con esa placa para el usuario actual.')
+    else:
+        form = DeleteVehicleForm()
+    
+    return render(request, 'deleteVehicle.html', {'form': form})
+
+@sin_organizacion_required
+def userManagement(request):
+    
+    # Pedimos el usuario
+    user = request.user
+    
+    # Filtramos los vehiculos del usuario y los pasamos al html
+    vehicles = Vehiculo.objects.filter(vhc_usuario_id=user)
+
+    return render(request, 'userManagement.html', {'user': user, 'vehicles': vehicles})
